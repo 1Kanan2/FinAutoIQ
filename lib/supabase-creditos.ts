@@ -25,7 +25,8 @@ export interface Operacion {
   es_compra_inteligente: boolean
   monto_balon: number | null
   cok: number
-  costos_adicionales: number
+  seguro_vehicular_pct: number
+  seguro_desgravamen_pct: number
   van: number
   tir: number
   tcea: number
@@ -53,7 +54,8 @@ export interface OperacionForm {
   es_compra_inteligente: boolean
   monto_balon: number | null
   cok: number
-  costos_adicionales: number
+  seguro_vehicular_pct: number
+  seguro_desgravamen_pct: number
   van: number
   tir: number
   tcea: number
@@ -192,7 +194,8 @@ export async function createOperacion(
     es_compra_inteligente: form.es_compra_inteligente,
     monto_balon: sanitizeNum(form.monto_balon),
     cok: sanitizeNum(form.cok) ?? 0,
-    costos_adicionales: sanitizeNum(form.costos_adicionales) ?? 0,
+    seguro_vehicular_pct: sanitizeNum(form.seguro_vehicular_pct) ?? 0,
+    seguro_desgravamen_pct: sanitizeNum(form.seguro_desgravamen_pct) ?? 0,
     van: sanitizeNum(form.van) ?? 0,
     tir: sanitizeNum(form.tir) ?? 0,
     tcea: sanitizeNum(form.tcea) ?? 0,

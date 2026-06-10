@@ -96,7 +96,8 @@ CREATE TABLE IF NOT EXISTS operaciones (
   es_compra_inteligente BOOLEAN NOT NULL DEFAULT FALSE,
   monto_balon DECIMAL(14, 2),
   cok DECIMAL(10, 6) NOT NULL DEFAULT 0,
-  costos_adicionales DECIMAL(14, 2) NOT NULL DEFAULT 0,
+  seguro_vehicular_pct DECIMAL(6,4) NOT NULL DEFAULT 0.3200,
+  seguro_desgravamen_pct DECIMAL(6,4) NOT NULL DEFAULT 0.0690,
   van DECIMAL(14, 4),
   tir DECIMAL(12, 10),
   tcea DECIMAL(12, 10),
@@ -144,3 +145,8 @@ CREATE POLICY "Allow authenticated users to insert cuotas"
   ON cuotas FOR INSERT WITH CHECK (auth.role() = 'authenticated');
 CREATE POLICY "Allow authenticated users to delete cuotas"
   ON cuotas FOR DELETE USING (auth.role() = 'authenticated');
+
+-- Ejecutar en Supabase para migrar tablas existentes:
+ALTER TABLE operaciones
+  ADD COLUMN IF NOT EXISTS seguro_vehicular_pct DECIMAL(6,4) DEFAULT 0.32,
+  ADD COLUMN IF NOT EXISTS seguro_desgravamen_pct DECIMAL(6,4) DEFAULT 0.069;

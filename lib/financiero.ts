@@ -12,6 +12,9 @@ export interface IFilaCronograma {
   interes: number;
   amortizacion: number;
   cuota: number;
+  seguroVehicular: number;
+  seguroDesgravamen: number;
+  cuotaTotal: number;
   saldoFinal: number;
   tipoFila: 'normal' | 'gracia_total' | 'gracia_parcial';
 }
@@ -25,6 +28,9 @@ export interface IParametrosCredito {
   fechaInicio: Date;
   esCompraInteligente: boolean;
   montoBalon?: number;
+  seguroVehicularPct: number;   // % mensual sobre precio vehículo (ej: 0.32)
+  seguroDesgravamenPct: number; // % mensual sobre saldo deudor (ej: 0.069)
+  precioVehiculo: number;
 }
 
 export interface IResultadoCredito {
@@ -52,23 +58,15 @@ export function temATea(tem: number): number {
   return Math.pow(1 + tem, 360 / 30) - 1;
 }
 
-// TEM → TNA  m*((1+tem)^(1/n)-1), n=m/12 — periodos/mes, no meses/periodo
+// TEM → TNA  m*((1+tem)^(1/n)-1)
 export function temATna(tem: number, periodoCapAnio: number): number {
   const m = periodoCapAnio;
-  const n = m / 12; // periodos de capitalización por mes bancario
+  const n = m / 12;
   return m * (Math.pow(1 + tem, 1 / n) - 1);
 }
 
 export function generarCronograma(params: IParametrosCredito): IFilaCronograma[] {
-  const {
-    capital,
-    tem,
-    plazoMeses,
-    mesesGraciaTotal,
-    mesesGraciaParcial,
-    esCompraInteligente,
-    montoBalon,
-  } = params;
+  const { capital, tem, plazoMeses, mesesGraciaTotal, mesesGraciaParcial, esCompraInteligente, montoBalon } = params;
 
   const cronograma: IFilaCronograma[] = [];
   let saldo = capital;
@@ -78,20 +76,13 @@ export function generarCronograma(params: IParametrosCredito): IFilaCronograma[]
   for (let k = 0; k < mesesGraciaTotal; k++) {
     const saldoInicial = saldo;
     const interes = saldoInicial * tem;
-    const amortizacion = 0;
-    const cuota = 0;
     const saldoFinal = saldoInicial + interes;
-
     cronograma.push({
-      numeroCuota,
-      saldoInicial,
-      interes,
-      amortizacion,
-      cuota,
-      saldoFinal,
-      tipoFila: 'gracia_total',
+      numeroCuota, saldoInicial, interes,
+      amortizacion: 0, cuota: 0,
+      seguroVehicular: 0, seguroDesgravamen: 0, cuotaTotal: 0,
+      saldoFinal, tipoFila: 'gracia_total',
     });
-
     saldo = saldoFinal;
     numeroCuota++;
   }
@@ -100,21 +91,13 @@ export function generarCronograma(params: IParametrosCredito): IFilaCronograma[]
   for (let k = 0; k < mesesGraciaParcial; k++) {
     const saldoInicial = saldo;
     const interes = saldoInicial * tem;
-    const amortizacion = 0;
-    const cuota = interes;
-    const saldoFinal = saldoInicial;
-
     cronograma.push({
-      numeroCuota,
-      saldoInicial,
-      interes,
-      amortizacion,
-      cuota,
-      saldoFinal,
-      tipoFila: 'gracia_parcial',
+      numeroCuota, saldoInicial, interes,
+      amortizacion: 0, cuota: interes,
+      seguroVehicular: 0, seguroDesgravamen: 0, cuotaTotal: 0,
+      saldoFinal: saldoInicial, tipoFila: 'gracia_parcial',
     });
-
-    saldo = saldoFinal;
+    saldo = saldoInicial;
     numeroCuota++;
   }
 
@@ -124,15 +107,13 @@ export function generarCronograma(params: IParametrosCredito): IFilaCronograma[]
 
   const C = saldo;
   const i = tem;
-  const factor = Math.pow(1 + i, n); // (1+i)^n
+  const factor = Math.pow(1 + i, n);
 
   let cuotaFija: number;
-
   if (esCompraInteligente && montoBalon !== undefined && montoBalon > 0) {
     // con balón: R = [C - V/(1+i)^n] * i(1+i)^n / ((1+i)^n - 1)
     cuotaFija = (C - montoBalon / factor) * ((i * factor) / (factor - 1));
   } else {
-    // estándar: R = C * i(1+i)^n / ((1+i)^n - 1)
     cuotaFija = C * ((i * factor) / (factor - 1));
   }
 
@@ -154,17 +135,11 @@ export function generarCronograma(params: IParametrosCredito): IFilaCronograma[]
     }
 
     const saldoFinal = Math.max(0, saldoInicial - amortizacion);
-
     cronograma.push({
-      numeroCuota,
-      saldoInicial,
-      interes,
-      amortizacion,
-      cuota,
-      saldoFinal,
-      tipoFila: 'normal',
+      numeroCuota, saldoInicial, interes, amortizacion, cuota,
+      seguroVehicular: 0, seguroDesgravamen: 0, cuotaTotal: 0,
+      saldoFinal, tipoFila: 'normal',
     });
-
     saldo = saldoFinal;
     numeroCuota++;
   }
@@ -181,14 +156,13 @@ export function calcularVAN(flujos: number[], cok: number): number {
 export function calcularTIR(flujos: number[]): number {
   const TOLERANCIA = 1e-7;
   const MAX_ITER = 1000;
-  let r = 0.1; // estimación inicial: 10% mensual
+  let r = 0.1;
 
   for (let iter = 0; iter < MAX_ITER; iter++) {
-    // evita calcular potencia con base negativa
     if (r <= -1) r = -0.9999;
 
-    let f = 0;   // VAN(r)
-    let df = 0;  // VAN'(r)
+    let f = 0;
+    let df = 0;
 
     for (let t = 0; t < flujos.length; t++) {
       const descuento = Math.pow(1 + r, t);
@@ -196,12 +170,9 @@ export function calcularTIR(flujos: number[]): number {
       df -= (t * flujos[t]) / (descuento * (1 + r));
     }
 
-    // derivada colapsa → salir
     if (Math.abs(df) < 1e-15) break;
-
     const delta = f / df;
     r -= delta;
-
     if (Math.abs(delta) < TOLERANCIA) break;
   }
 
@@ -209,47 +180,55 @@ export function calcularTIR(flujos: number[]): number {
 }
 
 // TCEA anual = (1 + TIR_mensual)^12 - 1
-// flujo: [capital - costos, -cuota1, -cuota2, ...]
-export function calcularTCEA(
-  valorRecibido: number,
-  cuotas: number[],
-  costosAdicionales: number
-): number {
+export function calcularTCEA(valorRecibido: number, cuotas: number[], costosAdicionales: number): number {
   const flujos = [valorRecibido - costosAdicionales, ...cuotas.map((c) => -c)];
-  const tirMensual = calcularTIR(flujos);
-  return Math.pow(1 + tirMensual, 12) - 1;
+  return Math.pow(1 + calcularTIR(flujos), 12) - 1;
 }
 
 export function calcularCredito(
   params: IParametrosCredito,
-  cok: number,
-  costosAdicionales: number
+  cok: number
 ): IResultadoCredito {
   const cronograma = generarCronograma(params);
 
-  const cuotas = cronograma.map((fila) => fila.cuota);
-  const totalIntereses = cronograma.reduce((suma, fila) => suma + fila.interes, 0);
-  const totalPagado = cronograma.reduce((suma, fila) => suma + fila.cuota, 0);
+  const segVehMensual = (params.seguroVehicularPct / 100) * params.precioVehiculo;
 
-  // el último pago incluye el balón en compra inteligente (sin él el TIR sale negativo)
-  const pagos = cuotas.map((c) => -c);
+  // Enriquecer cada fila con seguros
+  const cronogramaFinal = cronograma.map((fila) => {
+    const segDesgrav = (params.seguroDesgravamenPct / 100) * fila.saldoInicial;
+    return {
+      ...fila,
+      seguroVehicular: segVehMensual,
+      seguroDesgravamen: segDesgrav,
+      cuotaTotal: fila.cuota + segVehMensual + segDesgrav,
+    };
+  });
+
+  const totalIntereses = cronograma.reduce((suma, fila) => suma + fila.interes, 0);
+  const totalPagado = cronogramaFinal.reduce((suma, fila) => suma + fila.cuotaTotal, 0);
+
+  // TIR/VAN: solo cuota francesa (sin seguros)
+  const pagos = cronograma.map((c) => -c.cuota);
   if (params.esCompraInteligente && params.montoBalon && params.montoBalon > 0) {
     pagos[pagos.length - 1] -= params.montoBalon;
   }
+  const flujos = [params.capital, ...pagos];
 
-  const flujos     = [params.capital, ...pagos];
-  // TCEA usa capital neto (capital − costos adicionales)
-  const flujosTCEA = [params.capital - costosAdicionales, ...pagos];
+  // TCEA: cuota total (incluye seguros) — refleja costo real del crédito
+  const pagosConSeguros = cronogramaFinal.map((c) => -c.cuotaTotal);
+  if (params.esCompraInteligente && params.montoBalon && params.montoBalon > 0) {
+    pagosConSeguros[pagosConSeguros.length - 1] -= params.montoBalon;
+  }
+  const flujosTCEA = [params.capital, ...pagosConSeguros];
 
   const van  = calcularVAN(flujos, cok);
   const tir  = calcularTIR(flujos);
   const tcea = Math.pow(1 + calcularTIR(flujosTCEA), 12) - 1;
 
-  return { cronograma, van, tir, tcea, totalIntereses, totalPagado };
+  return { cronograma: cronogramaFinal, van, tir, tcea, totalIntereses, totalPagado };
 }
 
 // valores esperados:
 // tnaATem(0.331, 360) → 0.1165937
 // teaATem(0.45) → ~0.0317
 // francés capital=1440000 tem=0.044030651 plazo=8 → cuota1=217454.11
-// con gracia total mes1 → saldoFinal=1503404.14

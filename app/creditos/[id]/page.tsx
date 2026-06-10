@@ -64,6 +64,9 @@ export default function CreditoDetailPage() {
     `${simbolo} ${n.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
   const fmtPct = (n: number, d = 4) => `${(n * 100).toFixed(d)}%`
 
+  const segVehMensual = ((operacion.seguro_vehicular_pct ?? 0.32) / 100) * operacion.precio_vehiculo
+  const segDesgPct = (operacion.seguro_desgravamen_pct ?? 0.069) / 100
+
   const rowBg = (tipo: string, i: number) => {
     if (tipo === 'gracia_total') return 'bg-yellow-50'
     if (tipo === 'gracia_parcial') return 'bg-blue-50'
@@ -130,13 +133,18 @@ export default function CreditoDetailPage() {
             value={operacion.es_compra_inteligente ? `Sí — balón ${operacion.monto_balon ? fmt(operacion.monto_balon) : '-'}` : 'No'}
           />
           <InfoRow label="COK" value={`${operacion.cok}%`} />
-          <InfoRow label="Costos adicionales" value={fmt(operacion.costos_adicionales)} />
+          <InfoRow label="Seg. Vehicular" value={`${operacion.seguro_vehicular_pct ?? 0.32}% mensual s/ vehículo`} />
+          <InfoRow label="Seg. Desgravamen" value={`${operacion.seguro_desgravamen_pct ?? 0.069}% mensual s/ saldo`} />
         </div>
       </div>
 
       {/* Metric cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        <MetricCard label="Cuota Mensual" value={cuotaNormal ? fmt(cuotaNormal.cuota) : '-'} variant="gold" />
+        <MetricCard
+          label="Cuota Total Mensual"
+          value={cuotaNormal ? fmt(cuotaNormal.cuota + segVehMensual + segDesgPct * cuotaNormal.saldo_inicial) : '-'}
+          variant="gold"
+        />
         <MetricCard label="Total a Pagar" value={fmt(operacion.total_pagado)} variant="neutral" />
         <MetricCard label="Total Intereses" value={fmt(operacion.total_intereses)} variant="orange" />
         <MetricCard label="VAN" value={fmt(operacion.van)} variant={operacion.van >= 0 ? 'green' : 'red'} />
@@ -166,7 +174,7 @@ export default function CreditoDetailPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-[#1a3260]/80">
-                {['N°', 'Fecha', 'Saldo Inicial', 'Interés', 'Amortización', 'Cuota', 'Saldo Final', 'Tipo'].map((h) => (
+                {['N°', 'Fecha', 'Saldo Inicial', 'Interés', 'Amortización', 'Cuota', 'Seg. Veh.', 'Seg. Desgr.', 'Total Cuota', 'Saldo Final', 'Tipo'].map((h) => (
                   <th key={h} className="px-3 py-2.5 text-xs font-semibold text-white/90 whitespace-nowrap text-right first:text-left last:text-center">
                     {h}
                   </th>
@@ -176,6 +184,8 @@ export default function CreditoDetailPage() {
             <tbody className="divide-y divide-slate-100">
               {cuotas.map((fila, i) => {
                 const badge = tipoLabel(fila.tipo)
+                const segDesgFila = segDesgPct * fila.saldo_inicial
+                const cuotaTotalFila = fila.cuota + segVehMensual + segDesgFila
                 return (
                   <tr key={fila.numero_cuota} className={`${rowBg(fila.tipo, i)} hover:bg-[#fefce8] transition-colors duration-100`}>
                     <td className="px-3 py-2 font-semibold text-[#0f2044]">{fila.numero_cuota}</td>
@@ -185,7 +195,10 @@ export default function CreditoDetailPage() {
                     <td className="px-3 py-2 text-right tabular-nums text-slate-700">{fila.saldo_inicial.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
                     <td className="px-3 py-2 text-right tabular-nums font-medium" style={{ color: '#b8960c' }}>{fila.interes.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
                     <td className="px-3 py-2 text-right tabular-nums text-[#0f2044] font-medium">{fila.amortizacion.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
-                    <td className="px-3 py-2 text-right tabular-nums font-bold text-slate-900">{fila.cuota.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
+                    <td className="px-3 py-2 text-right tabular-nums text-slate-700">{fila.cuota.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
+                    <td className="px-3 py-2 text-right tabular-nums text-emerald-700">{segVehMensual.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
+                    <td className="px-3 py-2 text-right tabular-nums text-emerald-700">{segDesgFila.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
+                    <td className="px-3 py-2 text-right tabular-nums font-bold text-slate-900">{cuotaTotalFila.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
                     <td className="px-3 py-2 text-right tabular-nums text-slate-600">{fila.saldo_final.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
                     <td className="px-3 py-2 text-center">
                       <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${badge.cls}`}>
