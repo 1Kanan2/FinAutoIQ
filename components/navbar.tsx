@@ -77,13 +77,7 @@ export default function Navbar() {
             href="/"
             className="flex items-center gap-2 hover:opacity-90 transition-opacity duration-200 shrink-0"
           >
-            <img
-              src="/LogoFinAutoIQ.png"
-              alt="FinAutoIQ"
-              width={36}
-              height={36}
-              style={{ objectFit: 'contain' }}
-            />
+            <img src="/LogoFinAutoIQ.png" alt="FinAutoIQ" width={36} height={36} />
             <span className="text-[#c9a84c] font-bold text-xl tracking-wide">FinAutoIQ</span>
           </Link>
 

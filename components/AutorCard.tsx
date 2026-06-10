@@ -48,14 +48,7 @@ export default function AutorCard() {
 
           {/* Logo */}
           <div className="flex flex-col items-center gap-2 mb-4">
-            <img
-              src="/LogoKH.png"
-              alt="Keyner Hancco"
-              width={72}
-              height={72}
-              className="rounded-full object-cover"
-              style={{ border: '2px solid #0f2044' }}
-            />
+            <img src="/LogoKH.png" alt="KH" width={72} height={72} />
             <div className="text-center">
               <p className="text-xs text-slate-400">Creado por:</p>
               <p className="text-lg font-bold text-[#0f2044] leading-tight">Keyner Hancco</p>
@@ -117,13 +110,7 @@ export default function AutorCard() {
         style={{ border: '2px solid #0f2044' }}
         aria-label="Sobre el autor"
       >
-        <img
-          src="/LogoKH.png"
-          alt="Autor"
-          width={48}
-          height={48}
-          className="w-full h-full object-cover"
-        />
+        <img src="/LogoKH.png" alt="KH" width={48} height={48} />
       </button>
 
       <style>{`
