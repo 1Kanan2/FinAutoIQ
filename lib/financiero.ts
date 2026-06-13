@@ -179,11 +179,6 @@ export function calcularTIR(flujos: number[]): number {
   return r;
 }
 
-// TCEA anual = (1 + TIR_mensual)^12 - 1
-export function calcularTCEA(valorRecibido: number, cuotas: number[], costosAdicionales: number): number {
-  const flujos = [valorRecibido - costosAdicionales, ...cuotas.map((c) => -c)];
-  return Math.pow(1 + calcularTIR(flujos), 12) - 1;
-}
 
 export function calcularCredito(
   params: IParametrosCredito,
