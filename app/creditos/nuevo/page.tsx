@@ -75,9 +75,9 @@ export default function NuevoCreditoPage() {
   const [mesesGraciaParcial, setMesesGraciaParcial] = useState('0')
   const [esCompraInteligente, setEsCompraInteligente] = useState(false)
   const [montoBalon, setMontoBalon] = useState('')
-  const [cok, setCok] = useState('12')
+  const [cok, setCok] = useState('15')
   const [seguroVehicularPct, setSeguroVehicularPct] = useState('0.32')
-  const [seguroDesgravamenPct, setSeguroDesgravamenPct] = useState('0.069')
+  const [seguroDesgravamenPct, setSeguroDesgravamenPct] = useState('0.080')
 
   // Resultados
   const [resultado, setResultado] = useState<IResultadoCredito | null>(null)
@@ -153,26 +153,26 @@ export default function NuevoCreditoPage() {
     return `${String(f.getDate()).padStart(2, '0')}/${String(f.getMonth() + 1).padStart(2, '0')}/${f.getFullYear()}`
   }
 
-  // Rangos del mercado peruano 2026
-  const precioMin = moneda === 'PEN' ? 30000 : 8000
-  const precioMax = moneda === 'PEN' ? 800000 : 215000
-  const tasaMin = tipoTasa === 'efectiva' ? 8 : 8
-  const tasaMax = tipoTasa === 'efectiva' ? 35 : 40
+  // Rangos del mercado peruano 2025-2026
+  const precioMin = moneda === 'PEN' ? 15000 : 5000
+  const precioMax = moneda === 'PEN' ? 500000 : 135000
+  const tasaMin = tipoTasa === 'efectiva' ? 7 : 7
+  const tasaMax = tipoTasa === 'efectiva' ? 25 : 28
 
   // Validaciones en tiempo real (solo para campos con valor ingresado)
   const inv = {
     precio:  precioNum > 0 && (precioNum < precioMin || precioNum > precioMax),
     inicial: precioNum > 0 && inicialNum > 0 && (inicialNum < precioNum * 0.10 || inicialNum > precioNum * 0.80),
     tasa:    tasaNum > 0 && (tasaNum < tasaMin || tasaNum > tasaMax),
-    plazo:   plazoNum > 0 && (plazoNum < 12 || plazoNum > 72),
+    plazo:   plazoNum > 0 && (plazoNum < 12 || plazoNum > 84),
     gt:      gtNum > 3,
     gp:      gpNum > 3,
     gracia:  plazoNum > 0 && (gtNum + gpNum) >= plazoNum,
-    cok:     cokNum > 0 && (cokNum < 5 || cokNum > 30),
-    segVeh:  segVehNum > 0 && (segVehNum < 0.20 || segVehNum > 0.50),
-    segDesg: segDesgNum > 0 && (segDesgNum < 0.030 || segDesgNum > 0.150),
+    cok:     cokNum > 0 && (cokNum < 8 || cokNum > 25),
+    segVeh:  segVehNum > 0 && (segVehNum < 0.20 || segVehNum > 0.51),
+    segDesg: segDesgNum > 0 && (segDesgNum < 0.058 || segDesgNum > 0.136),
     balon:   esCompraInteligente && montoFinanciar > 0 && balonNum > 0 &&
-             (balonNum < montoFinanciar * 0.10 || balonNum > montoFinanciar * 0.60),
+             (balonNum < montoFinanciar * 0.10 || balonNum > montoFinanciar * 0.50),
   }
   const hayErrores = Object.values(inv).some(Boolean)
 
@@ -400,16 +400,17 @@ export default function NuevoCreditoPage() {
                   <label className={labelCls}>Precio del vehículo ({simbolo}) *</label>
                   <input type="number" value={precioVehiculo}
                     onChange={(e) => { precioEditadoManualmente.current = true; setPrecioVehiculo(e.target.value) }}
-                    placeholder="Ej: 45000" min="0" step="0.01" className={inputCls(inv.precio)} />
-                  <p className={helpCls}>Rango: {simbolo} {precioMin.toLocaleString('es-PE')} – {simbolo} {precioMax.toLocaleString('es-PE')}</p>
-                  {inv.precio && <p className="text-xs text-red-500 mt-0.5">Precio fuera del rango válido</p>}
+                    placeholder={moneda === 'PEN' ? 'Ej: 45 000' : 'Ej: 12 000'}
+                    min={precioMin} max={precioMax} step="100" className={inputCls(inv.precio)} />
+                  <p className={helpCls}>Rango mercado peruano 2025-2026: {simbolo} {precioMin.toLocaleString('es-PE')} – {simbolo} {precioMax.toLocaleString('es-PE')}</p>
+                  {inv.precio && <p className="text-xs text-red-500 mt-0.5">Precio fuera del rango válido ({simbolo} {precioMin.toLocaleString('es-PE')} – {simbolo} {precioMax.toLocaleString('es-PE')})</p>}
                 </div>
                 <div>
                   <label className={labelCls}>Cuota inicial ({simbolo})</label>
                   <input type="number" value={cuotaInicial}
                     onChange={(e) => setCuotaInicial(e.target.value)}
                     placeholder="0" min="0" step="0.01" className={inputCls(inv.inicial)} />
-                  <p className={helpCls}>Rango: 10% – 80% del precio del vehículo</p>
+                  <p className={helpCls}>Rango típico Perú: 10% – 80% del precio. Mín. 10% exigido por entidades financieras.</p>
                   {inv.inicial && <p className="text-xs text-red-500 mt-0.5">La cuota inicial debe ser entre 10% y 80% del precio del vehículo</p>}
                 </div>
                 <div>
@@ -459,17 +460,18 @@ export default function NuevoCreditoPage() {
                     <span className="text-gray-400 font-normal ml-1 text-xs">Rango: {tasaMin}%–{tasaMax}%</span>
                   </label>
                   <input type="number" value={tasa} onChange={(e) => setTasa(e.target.value)}
-                    placeholder={tipoTasa === 'nominal' && capitalizacion === 12 ? '4.40' : '18.5'}
-                    min="0" step="0.001" className={inputCls(inv.tasa)} />
-                  {inv.tasa && <p className="text-xs text-red-500 mt-0.5">La TEA debe estar entre {tasaMin}% y {tasaMax}%</p>}
+                    placeholder={tipoTasa === 'efectiva' ? '18.50' : capitalizacion === 12 ? '4.40' : '18.50'}
+                    min={tasaMin} max={tasaMax} step="0.01" className={inputCls(inv.tasa)} />
+                  <p className={helpCls}>Rango Perú 2025-2026: {tasaMin}% – {tasaMax}%. Referencial BCP/BBVA/Scotiabank.</p>
+                  {inv.tasa && <p className="text-xs text-red-500 mt-0.5">Tasa fuera del rango válido para el mercado peruano ({tasaMin}% – {tasaMax}%)</p>}
                 </div>
 
                 <div>
                   <label className={labelCls}>Plazo (meses) *</label>
                   <input type="number" value={plazoMeses} onChange={(e) => setPlazoMeses(e.target.value)}
-                    placeholder="36" min="12" max="72" step="1" className={inputCls(inv.plazo)} />
-                  <p className={helpCls}>Rango: 12 – 72 meses (mercado peruano BCP/BBVA)</p>
-                  {inv.plazo && <p className="text-xs text-red-500 mt-0.5">El plazo debe ser entre 12 y 72 meses</p>}
+                    placeholder="48" min="12" max="84" step="1" className={inputCls(inv.plazo)} />
+                  <p className={helpCls}>Rango: 12 – 84 meses. Plazos comunes: 24, 36, 48, 60 meses.</p>
+                  {inv.plazo && <p className="text-xs text-red-500 mt-0.5">El plazo debe ser entre 12 y 84 meses</p>}
                 </div>
 
                 <div>
@@ -539,10 +541,10 @@ export default function NuevoCreditoPage() {
                   {montoFinanciar > 0 && plazoNum >= 12 && (
                     <p className={helpCls}>
                       Sugerido: {pctBalonSugerido(plazoNum)}% del monto a financiar según plazo → {fmt(montoFinanciar * pctBalonSugerido(plazoNum) / 100)}.
-                      El balón representa el VFG. Rango válido: 10% – 60% del capital.
+                      El balón representa el VFG. Rango válido: 10% – 50% del capital.
                     </p>
                   )}
-                  {inv.balon && <p className="text-xs text-red-500 mt-0.5">El balón debe ser entre 10% y 60% del monto a financiar</p>}
+                  {inv.balon && <p className="text-xs text-red-500 mt-0.5">El balón debe ser entre 10% y 50% del monto a financiar</p>}
                 </div>
               )}
 
@@ -551,9 +553,9 @@ export default function NuevoCreditoPage() {
                 <div>
                   <label className={labelCls}>COK — Costo de Oportunidad (%)</label>
                   <input type="number" value={cok} onChange={(e) => setCok(e.target.value)}
-                    placeholder="12" min="5" max="30" step="0.01" className={inputCls(inv.cok)} />
-                  <p className={helpCls}>Rango: 5% – 30%. Valor sugerido: 12%. Usado para el VAN.</p>
-                  {inv.cok && <p className="text-xs text-red-500 mt-0.5">El COK debe estar entre 5% y 30%</p>}
+                    placeholder="15" min="8" max="25" step="0.01" className={inputCls(inv.cok)} />
+                  <p className={helpCls}>Rango Perú 2025-2026: 8% – 25%. Sugerido: 15% (ref. renta variable S&P Lima). Usado para el VAN.</p>
+                  {inv.cok && <p className="text-xs text-red-500 mt-0.5">El COK debe estar entre 8% y 25%</p>}
                 </div>
 
                 {/* Seguro Vehicular */}
@@ -561,12 +563,12 @@ export default function NuevoCreditoPage() {
                   <label className={labelCls}>Seguro Vehicular (% mensual s/ valor vehículo)</label>
                   <input type="number" value={seguroVehicularPct}
                     onChange={(e) => setSeguroVehicularPct(e.target.value)}
-                    placeholder="0.32" min="0.20" max="0.50" step="0.01" className={inputCls(inv.segVeh)} />
+                    placeholder="0.32" min="0.20" max="0.51" step="0.01" className={inputCls(inv.segVeh)} />
                   <p className={helpCls}>
-                    Rango típico en Perú: 0.20% – 0.50% mensual sobre el valor del vehículo. BBVA cobra 0.32%.
+                    Rango Perú: 0.20% – 0.51% mensual s/ valor vehículo. BBVA: 0.32%, BCP: ~0.35%, Pacífico: ~0.45%.
                     {precioNum > 0 && <> Est. mensual: <strong>{fmt(segVehMensual)}</strong></>}
                   </p>
-                  {inv.segVeh && <p className="text-xs text-red-500 mt-0.5">Rango: 0.20% – 0.50%</p>}
+                  {inv.segVeh && <p className="text-xs text-red-500 mt-0.5">Rango válido: 0.20% – 0.51%</p>}
                 </div>
 
                 {/* Seguro de Desgravamen */}
@@ -574,12 +576,12 @@ export default function NuevoCreditoPage() {
                   <label className={labelCls}>Seguro de Desgravamen (% mensual s/ saldo deudor)</label>
                   <input type="number" value={seguroDesgravamenPct}
                     onChange={(e) => setSeguroDesgravamenPct(e.target.value)}
-                    placeholder="0.069" min="0.030" max="0.150" step="0.001" className={inputCls(inv.segDesg)} />
+                    placeholder="0.080" min="0.058" max="0.136" step="0.001" className={inputCls(inv.segDesg)} />
                   <p className={helpCls}>
-                    Rango típico en Perú: 0.030% – 0.150% mensual sobre el saldo deudor. BBVA cobra 0.069% individual.
+                    Rango Perú: 0.058% – 0.136% mensual s/ saldo deudor. BBVA individual: 0.069%, con cónyuge: 0.136%, BCP: ~0.080%.
                     {montoFinanciar > 0 && <> Est. 1ª cuota: <strong>{fmt(segDesgEstimado)}</strong></>}
                   </p>
-                  {inv.segDesg && <p className="text-xs text-red-500 mt-0.5">Rango: 0.030% – 0.150%</p>}
+                  {inv.segDesg && <p className="text-xs text-red-500 mt-0.5">Rango válido: 0.058% – 0.136%</p>}
                 </div>
               </div>
             </div>
@@ -593,14 +595,14 @@ export default function NuevoCreditoPage() {
                 {inv.precio && <p>• Precio del vehículo: rango {simbolo} {precioMin.toLocaleString('es-PE')} – {simbolo} {precioMax.toLocaleString('es-PE')}</p>}
                 {inv.inicial && <p>• Cuota inicial: debe ser entre 10% y 80% del precio del vehículo</p>}
                 {inv.tasa && <p>• Tasa de interés: debe estar entre {tasaMin}% y {tasaMax}%</p>}
-                {inv.plazo && <p>• Plazo: debe ser entre 12 y 72 meses</p>}
+                {inv.plazo && <p>• Plazo: debe ser entre 12 y 84 meses</p>}
                 {inv.gt && <p>• Gracia total: máximo 3 meses</p>}
                 {inv.gp && <p>• Gracia parcial: máximo 3 meses</p>}
                 {inv.gracia && <p>• La suma de gracia ({gtNum + gpNum} meses) debe ser menor al plazo ({plazoNum} meses)</p>}
-                {inv.cok && <p>• COK: debe estar entre 5% y 30%</p>}
-                {inv.segVeh && <p>• Seguro vehicular: debe estar entre 0.20% y 0.50%</p>}
-                {inv.segDesg && <p>• Seguro de desgravamen: debe estar entre 0.030% y 0.150%</p>}
-                {inv.balon && <p>• Monto balón: debe ser entre 10% y 60% del monto a financiar</p>}
+                {inv.cok && <p>• COK: debe estar entre 8% y 25%</p>}
+                {inv.segVeh && <p>• Seguro vehicular: debe estar entre 0.20% y 0.51%</p>}
+                {inv.segDesg && <p>• Seguro de desgravamen: debe estar entre 0.058% y 0.136%</p>}
+                {inv.balon && <p>• Monto balón: debe ser entre 10% y 50% del monto a financiar</p>}
               </div>
             )}
             <button
