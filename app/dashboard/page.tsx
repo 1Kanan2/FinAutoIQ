@@ -206,7 +206,7 @@ export default function DashboardPage() {
                       <td className="px-4 py-3 font-semibold text-[#0f2044] tabular-nums whitespace-nowrap">
                         {fmtMonto(op.monto_financiar, op.moneda)}
                       </td>
-                      <td className="px-4 py-3 font-bold tabular-nums" style={{ color: '#c9a84c' }}>
+                      <td className="px-4 py-3 font-bold tabular-nums text-amber-700">
                         {(op.tcea * 100).toFixed(2)}%
                       </td>
                       <td className="px-4 py-3 text-slate-500 whitespace-nowrap">

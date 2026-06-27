@@ -579,7 +579,7 @@ export default function NuevoCreditoPage() {
                     placeholder="0.080" min="0.058" max="0.136" step="0.001" className={inputCls(inv.segDesg)} />
                   <p className={helpCls}>
                     Rango Perú: 0.058% – 0.136% mensual s/ saldo deudor. BBVA individual: 0.069%, con cónyuge: 0.136%, BCP: ~0.080%.
-                    {montoFinanciar > 0 && <> Est. 1ª cuota: <strong>{fmt(segDesgEstimado)}</strong></>}
+                    {montoFinanciar > 0 && <> Est. mensual fijo: <strong>{fmt(segDesgEstimado)}</strong></>}
                   </p>
                   {inv.segDesg && <p className="text-xs text-red-500 mt-0.5">Rango válido: 0.058% – 0.136%</p>}
                 </div>
@@ -660,7 +660,7 @@ export default function NuevoCreditoPage() {
             </span>
             {esCompraInteligente && (
               <span className="flex items-center gap-1.5 text-[#0f2044] font-semibold">
-                ⚡ Compra inteligente — saldo final de la última cuota = balón a pagar
+                ⚡ Compra inteligente — la última cuota incluye el pago completo del balón (saldo final = 0)
               </span>
             )}
           </div>
@@ -744,20 +744,22 @@ function MetricCard({
 }: {
   label: string; value: string; subtitle?: string; color: string; big?: boolean
 }) {
-  const palette: Record<string, string> = {
-    gold:    'bg-[#c9a84c]/10 border-[#c9a84c]/40 text-[#b8960c]',
-    orange:  'bg-orange-50   border-orange-200   text-orange-700',
-    green:   'bg-green-50    border-green-200    text-green-700',
-    red:     'bg-red-50      border-red-200      text-red-700',
-    purple:  'bg-purple-50   border-purple-200   text-purple-700',
-    dark:    'bg-[#0f2044]/10 border-[#0f2044]/20 text-[#0f2044]',
-    neutral: 'bg-slate-50    border-slate-200    text-slate-700',
+  type CardStyle = { container: string; label: string; value: string }
+  const palette: Record<string, CardStyle> = {
+    gold:    { container: 'bg-amber-50 border-amber-200',   label: 'text-amber-700',  value: 'text-slate-900' },
+    orange:  { container: 'bg-orange-50 border-orange-200', label: 'text-orange-700', value: 'text-orange-900' },
+    green:   { container: 'bg-green-50 border-green-200',   label: 'text-green-700',  value: 'text-green-900' },
+    red:     { container: 'bg-red-50 border-red-200',       label: 'text-red-700',    value: 'text-red-900' },
+    purple:  { container: 'bg-purple-50 border-purple-200', label: 'text-purple-700', value: 'text-purple-900' },
+    dark:    { container: 'bg-slate-100 border-slate-300',  label: 'text-slate-600',  value: 'text-slate-900' },
+    neutral: { container: 'bg-slate-50 border-slate-200',   label: 'text-slate-500',  value: 'text-slate-900' },
   }
+  const c = palette[color] ?? palette.neutral
   return (
-    <div className={`border rounded-xl p-4 hover:shadow-md transition-shadow duration-200 ${palette[color] ?? palette.neutral}`}>
-      <div className="text-xs font-medium opacity-60 mb-1">{label}</div>
-      <div className={`font-bold leading-tight break-all ${big ? 'text-xl' : 'text-base'}`}>{value}</div>
-      {subtitle && <div className="text-xs opacity-60 mt-1">{subtitle}</div>}
+    <div className={`border rounded-xl p-4 hover:shadow-md transition-shadow duration-200 ${c.container}`}>
+      <div className={`text-xs font-semibold mb-1 ${c.label}`}>{label}</div>
+      <div className={`font-bold leading-tight break-all tabular-nums ${c.value} ${big ? 'text-2xl' : 'text-base'}`}>{value}</div>
+      {subtitle && <div className="text-xs text-slate-600 mt-1">{subtitle}</div>}
     </div>
   )
 }

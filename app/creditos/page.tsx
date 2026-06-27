@@ -101,23 +101,23 @@ export default function CreditosPage() {
                       <div className="font-semibold text-slate-900 whitespace-nowrap">
                         {op.clientes?.nombre} {op.clientes?.apellidos}
                       </div>
-                      <div className="text-xs text-slate-400">DNI {op.clientes?.dni}</div>
+                      <div className="text-xs text-slate-500">DNI {op.clientes?.dni}</div>
                     </td>
                     <td className="px-4 py-3">
                       <div className="text-slate-800">{op.vehiculos?.marca} {op.vehiculos?.modelo}</div>
-                      <div className="text-xs text-slate-400">{op.vehiculos?.anio}</div>
+                      <div className="text-xs text-slate-500">{op.vehiculos?.anio}</div>
                     </td>
                     <td className="px-4 py-3 font-semibold text-[#0f2044] tabular-nums whitespace-nowrap">
                       {fmt(op.monto_financiar, op.moneda)}
                     </td>
                     <td className="px-4 py-3">
                       <span className="font-medium text-slate-800">{op.tasa_interes}%</span>
-                      <div className="text-xs text-slate-400">
+                      <div className="text-xs text-slate-500">
                         {op.tipo_tasa === 'efectiva' ? 'TEA' : `TNA cap.${op.capitalizacion}`}
                       </div>
                     </td>
                     <td className="px-4 py-3 text-slate-700 tabular-nums">{op.plazo_meses}m</td>
-                    <td className="px-4 py-3 font-bold tabular-nums" style={{ color: '#c9a84c' }}>
+                    <td className="px-4 py-3 font-bold tabular-nums text-amber-700">
                       {(op.tcea * 100).toFixed(2)}%
                     </td>
                     <td className="px-4 py-3 text-slate-500 whitespace-nowrap">

@@ -125,8 +125,8 @@ export function generarCronograma(params: IParametrosCredito): IFilaCronograma[]
     let amortizacion: number;
     let cuota: number;
 
-    if (isUltimoPeriodo && !esCompraInteligente) {
-      // cierre exacto, absorbe redondeo
+    if (isUltimoPeriodo) {
+      // última cuota: cierra saldo en cero (en Compra Inteligente el saldoInicial ≈ balón)
       amortizacion = saldoInicial;
       cuota = interes + amortizacion;
     } else {
@@ -134,7 +134,7 @@ export function generarCronograma(params: IParametrosCredito): IFilaCronograma[]
       cuota = cuotaFija;
     }
 
-    const saldoFinal = Math.max(0, saldoInicial - amortizacion);
+    const saldoFinal = isUltimoPeriodo ? 0 : Math.max(0, saldoInicial - amortizacion);
     cronograma.push({
       numeroCuota, saldoInicial, interes, amortizacion, cuota,
       seguroVehicular: 0, seguroDesgravamen: 0, cuotaTotal: 0,
@@ -187,33 +187,26 @@ export function calcularCredito(
   const cronograma = generarCronograma(params);
 
   const segVehMensual = (params.seguroVehicularPct / 100) * params.precioVehiculo;
+  // C1: desgravamen constante calculado sobre el capital inicial (no sobre saldo variable)
+  const segDesgravMensual = (params.seguroDesgravamenPct / 100) * params.capital;
 
-  // Enriquecer cada fila con seguros
-  const cronogramaFinal = cronograma.map((fila) => {
-    const segDesgrav = (params.seguroDesgravamenPct / 100) * fila.saldoInicial;
-    return {
-      ...fila,
-      seguroVehicular: segVehMensual,
-      seguroDesgravamen: segDesgrav,
-      cuotaTotal: fila.cuota + segVehMensual + segDesgrav,
-    };
-  });
+  // Enriquecer cada fila con seguros constantes
+  const cronogramaFinal = cronograma.map((fila) => ({
+    ...fila,
+    seguroVehicular: segVehMensual,
+    seguroDesgravamen: segDesgravMensual,
+    cuotaTotal: fila.cuota + segVehMensual + segDesgravMensual,
+  }));
 
   const totalIntereses = cronograma.reduce((suma, fila) => suma + fila.interes, 0);
   const totalPagado = cronogramaFinal.reduce((suma, fila) => suma + fila.cuotaTotal, 0);
 
-  // TIR/VAN: solo cuota francesa (sin seguros)
+  // C2: el balón ya está embebido en la última cuota del cronograma (saldoFinal = 0)
   const pagos = cronograma.map((c) => -c.cuota);
-  if (params.esCompraInteligente && params.montoBalon && params.montoBalon > 0) {
-    pagos[pagos.length - 1] -= params.montoBalon;
-  }
   const flujos = [params.capital, ...pagos];
 
-  // TCEA: cuota total (incluye seguros) — refleja costo real del crédito
+  // TCEA: cuota total con seguros (balón ya incluido en última cuota)
   const pagosConSeguros = cronogramaFinal.map((c) => -c.cuotaTotal);
-  if (params.esCompraInteligente && params.montoBalon && params.montoBalon > 0) {
-    pagosConSeguros[pagosConSeguros.length - 1] -= params.montoBalon;
-  }
   const flujosTCEA = [params.capital, ...pagosConSeguros];
 
   const van  = calcularVAN(flujos, cok);

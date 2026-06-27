@@ -65,7 +65,7 @@ export default function CreditoDetailPage() {
   const fmtPct = (n: number, d = 4) => `${(n * 100).toFixed(d)}%`
 
   const segVehMensual = ((operacion.seguro_vehicular_pct ?? 0.32) / 100) * operacion.precio_vehiculo
-  const segDesgPct = (operacion.seguro_desgravamen_pct ?? 0.069) / 100
+  const segDesgMensual = ((operacion.seguro_desgravamen_pct ?? 0.069) / 100) * operacion.monto_financiar
 
   const rowBg = (tipo: string, i: number) => {
     if (tipo === 'gracia_total') return 'bg-yellow-50'
@@ -134,7 +134,7 @@ export default function CreditoDetailPage() {
           />
           <InfoRow label="COK" value={`${operacion.cok}%`} />
           <InfoRow label="Seg. Vehicular" value={`${operacion.seguro_vehicular_pct ?? 0.32}% mensual s/ vehículo`} />
-          <InfoRow label="Seg. Desgravamen" value={`${operacion.seguro_desgravamen_pct ?? 0.069}% mensual s/ saldo`} />
+          <InfoRow label="Seg. Desgravamen" value={`${operacion.seguro_desgravamen_pct ?? 0.069}% mensual s/ capital financiado`} />
         </div>
       </div>
 
@@ -142,7 +142,7 @@ export default function CreditoDetailPage() {
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         <MetricCard
           label="Cuota Total Mensual"
-          value={cuotaNormal ? fmt(cuotaNormal.cuota + segVehMensual + segDesgPct * cuotaNormal.saldo_inicial) : '-'}
+          value={cuotaNormal ? fmt(cuotaNormal.cuota + segVehMensual + segDesgMensual) : '-'}
           variant="gold"
         />
         <MetricCard label="Total a Pagar" value={fmt(operacion.total_pagado)} variant="neutral" />
@@ -184,8 +184,7 @@ export default function CreditoDetailPage() {
             <tbody className="divide-y divide-slate-100">
               {cuotas.map((fila, i) => {
                 const badge = tipoLabel(fila.tipo)
-                const segDesgFila = segDesgPct * fila.saldo_inicial
-                const cuotaTotalFila = fila.cuota + segVehMensual + segDesgFila
+                const cuotaTotalFila = fila.cuota + segVehMensual + segDesgMensual
                 return (
                   <tr key={fila.numero_cuota} className={`${rowBg(fila.tipo, i)} hover:bg-[#fefce8] transition-colors duration-100`}>
                     <td className="px-3 py-2 font-semibold text-[#0f2044]">{fila.numero_cuota}</td>
@@ -197,7 +196,7 @@ export default function CreditoDetailPage() {
                     <td className="px-3 py-2 text-right tabular-nums text-[#0f2044] font-medium">{fila.amortizacion.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
                     <td className="px-3 py-2 text-right tabular-nums text-slate-700">{fila.cuota.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
                     <td className="px-3 py-2 text-right tabular-nums text-emerald-700">{segVehMensual.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
-                    <td className="px-3 py-2 text-right tabular-nums text-emerald-700">{segDesgFila.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
+                    <td className="px-3 py-2 text-right tabular-nums text-emerald-700">{segDesgMensual.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
                     <td className="px-3 py-2 text-right tabular-nums font-bold text-slate-900">{cuotaTotalFila.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
                     <td className="px-3 py-2 text-right tabular-nums text-slate-600">{fila.saldo_final.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
                     <td className="px-3 py-2 text-center">
@@ -228,19 +227,21 @@ function InfoRow({ label, value, bold }: { label: string; value: string; bold?: 
 }
 
 function MetricCard({ label, value, variant }: { label: string; value: string; variant: string }) {
-  const styles: Record<string, string> = {
-    gold:    'bg-[#c9a84c]/10 border border-[#c9a84c]/40 text-[#b8960c]',
-    neutral: 'bg-slate-50 border border-slate-200 text-slate-700',
-    orange:  'bg-orange-50 border border-orange-200 text-orange-700',
-    green:   'bg-green-50 border border-green-200 text-green-700',
-    red:     'bg-red-50 border border-red-200 text-red-700',
-    purple:  'bg-purple-50 border border-purple-200 text-purple-700',
-    dark:    'bg-[#0f2044]/10 border border-[#0f2044]/20 text-[#0f2044]',
+  type CardStyle = { container: string; label: string; value: string }
+  const styles: Record<string, CardStyle> = {
+    gold:    { container: 'bg-amber-50 border border-amber-200',   label: 'text-amber-700',  value: 'text-slate-900' },
+    neutral: { container: 'bg-slate-50 border border-slate-200',   label: 'text-slate-500',  value: 'text-slate-900' },
+    orange:  { container: 'bg-orange-50 border border-orange-200', label: 'text-orange-700', value: 'text-orange-900' },
+    green:   { container: 'bg-green-50 border border-green-200',   label: 'text-green-700',  value: 'text-green-900' },
+    red:     { container: 'bg-red-50 border border-red-200',       label: 'text-red-700',    value: 'text-red-900' },
+    purple:  { container: 'bg-purple-50 border border-purple-200', label: 'text-purple-700', value: 'text-purple-900' },
+    dark:    { container: 'bg-slate-100 border border-slate-300',  label: 'text-slate-600',  value: 'text-slate-900' },
   }
+  const s = styles[variant] ?? styles.neutral
   return (
-    <div className={`rounded-xl p-3 text-center hover:shadow-md transition-shadow duration-200 ${styles[variant] ?? styles.neutral}`}>
-      <div className="text-[10px] font-semibold opacity-60 mb-1 leading-tight uppercase tracking-wide">{label}</div>
-      <div className="text-sm font-bold leading-snug break-all tabular-nums">{value}</div>
+    <div className={`rounded-xl p-3 text-center hover:shadow-md transition-shadow duration-200 ${s.container}`}>
+      <div className={`text-[10px] font-semibold mb-1 leading-tight uppercase tracking-wide ${s.label}`}>{label}</div>
+      <div className={`text-sm font-bold leading-snug break-all tabular-nums ${s.value}`}>{value}</div>
     </div>
   )
 }
