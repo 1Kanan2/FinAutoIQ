@@ -4,9 +4,10 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createVehiculo, type VehiculoForm } from '@/lib/supabase-vehicles'
+import { IconChevronLeft } from '@/components/ui/icons'
 
-const inputCls = 'w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#c9a84c]/10 focus:border-[#c9a84c] outline-none text-sm text-slate-900 placeholder:text-slate-400 transition-all duration-200'
-const labelCls = 'block text-sm font-medium text-slate-700 mb-1.5'
+const inputCls = 'w-full box-border px-3.5 py-2.5 rounded-[11px] border border-(--border) bg-(--surface-alt) text-(--ink) text-sm outline-none placeholder:text-(--ink-mute) transition-all focus:border-(--gold-500) focus:ring-3 focus:ring-(--gold-500)/15'
+const labelCls = 'block text-sm font-medium text-(--ink-soft) mb-1.5'
 
 export default function NuevoVehiculoPage() {
   const router = useRouter()
@@ -48,17 +49,17 @@ export default function NuevoVehiculoPage() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-6">
-        <Link href="/vehiculos" className="text-[#0f2044] hover:text-[#1a3260] text-sm font-medium transition-colors">
-          ← Volver a vehículos
+        <Link href="/vehiculos" className="inline-flex items-center gap-1 text-(--ink-mute) hover:text-(--ink) text-sm font-medium transition-colors">
+          <IconChevronLeft size={14} /> Volver a vehículos
         </Link>
-        <h1 className="text-3xl font-bold text-[#0f2044] mt-2">Nuevo Vehículo</h1>
+        <h1 className="font-serif-display italic text-2xl font-semibold text-(--ink) mt-2">Nuevo Vehículo</h1>
       </div>
 
-      <div className="bg-white rounded-xl shadow-md border-l-[3px] border-[#c9a84c] p-8">
+      <div className="bg-(--surface) border border-(--border) rounded-[20px] shadow-(--shadow) p-8">
         {error && (
-          <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
-            <span className="text-red-500 shrink-0 mt-0.5">⚠</span>
-            <p className="text-sm text-red-700">{error}</p>
+          <div className="mb-6 p-3 bg-(--bad)/10 border border-(--bad)/30 rounded-lg flex items-start gap-2">
+            <span className="text-(--bad) shrink-0 mt-0.5">⚠</span>
+            <p className="text-sm text-(--bad)">{error}</p>
           </div>
         )}
 
@@ -95,13 +96,13 @@ export default function NuevoVehiculoPage() {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 bg-[#0f2044] hover:bg-[#1a3260] disabled:bg-[#0f2044]/50 text-white font-semibold py-2.5 px-6 rounded-lg transition-all duration-200 active:scale-[0.98] shadow-sm hover:shadow-md"
+              className="flex-1 bg-(--navy-900) hover:bg-(--navy-800) disabled:opacity-60 text-white font-semibold py-2.75 px-6 rounded-xl transition-all active:scale-[0.98] shadow-[0_10px_24px_-10px_rgba(15,32,68,.5)]"
             >
               {loading ? 'Creando...' : 'Crear Vehículo'}
             </button>
             <Link
               href="/vehiculos"
-              className="flex-1 border border-[#c9a84c] text-[#0f2044] font-semibold py-2.5 px-6 rounded-lg transition-all duration-200 hover:bg-[#c9a84c]/10 active:scale-[0.98] text-center"
+              className="flex-1 border border-(--gold-500) text-(--ink) font-semibold py-2.75 px-6 rounded-xl transition-all hover:bg-(--gold-100) active:scale-[0.98] text-center"
             >
               Cancelar
             </Link>

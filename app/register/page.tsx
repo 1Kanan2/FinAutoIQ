@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
+import ThemeToggle from '@/components/ThemeToggle'
+import { IconBrand, IconSpinner } from '@/components/ui/icons'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -39,41 +41,41 @@ export default function RegisterPage() {
   }
 
   const inputCls = (disabled?: boolean) =>
-    `w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#c9a84c]/10 focus:border-[#c9a84c] outline-none text-sm text-slate-900 placeholder:text-slate-400 transition-all duration-200 ${disabled ? 'opacity-60 cursor-not-allowed' : ''}`
-  const labelCls = 'block text-sm font-medium text-slate-700 mb-1.5'
+    `w-full box-border px-3.5 py-3 rounded-[11px] border border-(--border) bg-(--surface-alt) text-(--ink) text-[13.5px] outline-none placeholder:text-(--ink-mute) transition-all focus:border-(--gold-500) focus:ring-3 focus:ring-(--gold-500)/15 ${disabled ? 'opacity-60 cursor-not-allowed' : ''}`
+  const labelCls = 'block text-[12.5px] font-semibold text-(--ink-soft) mb-1.5'
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f8f9fc] to-white py-12 px-4">
-      <div className="w-full max-w-md space-y-6">
+    <div className="min-h-screen flex items-center justify-center bg-(--bg) text-(--ink) py-12 px-4 relative">
+      <ThemeToggle className="absolute top-7 right-7 w-10.5 h-10.5 rounded-xl border border-(--border) bg-(--surface-alt) text-(--gold-600) flex items-center justify-center cursor-pointer" />
 
-        {/* Logo */}
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-[#0f2044] mb-1 tracking-wide">
-            FinAutoIQ
-          </h1>
-          <p className="text-[#c9a84c] text-sm font-medium">Portal de Financiamiento · FIE</p>
+      <div className="w-full max-w-100 animate-fade-up">
+        <div className="text-center mb-8">
+          <div className="w-11 h-11 mx-auto rounded-xl bg-linear-to-br from-(--gold-400) to-(--gold-600) flex items-center justify-center shadow-[0_8px_20px_-6px_rgba(198,160,82,.5)] mb-3">
+            <IconBrand size={22} />
+          </div>
+          <h1 className="font-serif-display italic text-[26px] font-semibold text-(--ink) mb-1">FinAutoIQ</h1>
+          <p className="text-[13.5px] text-(--gold-600) font-semibold">Private Banking Suite</p>
         </div>
 
-        {/* Card */}
-        <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-8">
-          <h2 className="text-xl font-bold text-[#0f2044] mb-6 text-center">
+        <div className="bg-(--surface) border border-(--border) rounded-[20px] shadow-(--shadow) p-8">
+          <h2 className="font-serif-display italic text-[20px] font-semibold text-(--ink) mb-6 text-center">
             Crear Cuenta
           </h2>
 
           {error && (
-            <div className="mb-5 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
-              <span className="text-red-500 shrink-0 mt-0.5">⚠</span>
-              <p className="text-sm text-red-700">{error}</p>
+            <div className="mb-5 p-3 bg-(--bad)/10 border border-(--bad)/30 rounded-lg flex items-start gap-2">
+              <span className="text-(--bad) shrink-0 mt-0.5">⚠</span>
+              <p className="text-sm text-(--bad)">{error}</p>
             </div>
           )}
           {success && (
-            <div className="mb-5 p-3 bg-green-50 border border-green-200 rounded-lg flex items-start gap-2">
-              <span className="text-green-500 shrink-0 mt-0.5">✓</span>
-              <p className="text-sm text-green-700">¡Registro exitoso! Redirigiendo a inicio de sesión...</p>
+            <div className="mb-5 p-3 bg-(--good)/10 border border-(--good)/30 rounded-lg flex items-start gap-2">
+              <span className="text-(--good) shrink-0 mt-0.5">✓</span>
+              <p className="text-sm text-(--good)">¡Registro exitoso! Redirigiendo a inicio de sesión...</p>
             </div>
           )}
 
-          <form onSubmit={handleRegister} className="space-y-5">
+          <form onSubmit={handleRegister} className="flex flex-col gap-4.5">
             <div>
               <label htmlFor="email" className={labelCls}>Correo Electrónico</label>
               <input
@@ -119,23 +121,20 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading || success}
-              className="w-full bg-[#0f2044] hover:bg-[#1a3260] disabled:bg-[#0f2044]/50 text-white font-semibold py-2.5 rounded-lg transition-all duration-200 active:scale-[0.98] shadow-sm hover:shadow-md mt-2"
+              className="mt-1.5 w-full py-3.5 rounded-[11px] bg-(--navy-900) hover:bg-(--navy-800) disabled:opacity-60 text-white font-bold text-sm cursor-pointer shadow-[0_10px_24px_-10px_rgba(15,32,68,.5)] transition-all hover:-translate-y-px"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
-                  <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                  </svg>
+                  <IconSpinner size={16} />
                   Registrando...
                 </span>
               ) : 'Crear Cuenta'}
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-slate-500">
+          <p className="mt-5.5 text-center text-[13px] text-(--ink-mute)">
             ¿Ya tienes cuenta?{' '}
-            <Link href="/login" className="text-[#c9a84c] hover:text-[#b8960c] font-semibold transition-colors">
+            <Link href="/login" className="font-bold text-(--gold-600) hover:text-(--gold-500) transition-colors">
               Inicia sesión
             </Link>
           </p>

@@ -1,33 +1,92 @@
 @import "tailwindcss";
 
+/* ── Design tokens — FinAutoIQ Private Banking Suite ── */
 :root {
-  --bg: #ffffff;
-  --fg: #0f172a;
-  --navy: #0f2044;
-  --navy-hover: #1a3260;
-  --gold: #c9a84c;
-  --gold-muted: #b8960c;
+  --bg: #f6f4ee;
+  --bg-alt: #efece2;
+  --surface: #ffffff;
+  --surface-alt: #fbf9f3;
+  --ink: #121a2b;
+  --ink-soft: #4d5568;
+  --ink-mute: #8a92a3;
+  --border: #e7e2d5;
+
+  --navy-950: #0a1428;
+  --navy-900: #0f1f3d;
+  --navy-800: #17315a;
+  --navy-700: #213f6e;
+
+  --gold-700: #8f6f34;
+  --gold-600: #ad8944;
+  --gold-500: #c6a052;
+  --gold-400: #dcbd7d;
+  --gold-100: #f4ead3;
+
+  --good: #3f7a5c;
+  --bad: #b0503f;
+
+  --shadow: 0 20px 60px -24px rgba(15, 32, 68, 0.28);
+  --shadow-lg: 0 26px 50px -20px rgba(15, 32, 68, 0.3);
+
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0a1120;
+  --bg-alt: #0e1830;
+  --surface: #121c33;
+  --surface-alt: #16213c;
+  --ink: #eef1f8;
+  --ink-soft: #aab2c6;
+  --ink-mute: #6e7892;
+  --border: #233252;
+
+  --navy-950: #050b16;
+  --navy-900: #0b1730;
+  --navy-800: #132848;
+  --navy-700: #1b365e;
+
+  --gold-700: #8f6f34;
+  --gold-600: #c6a052;
+  --gold-500: #d9bd7c;
+  --gold-400: #e7d29e;
+  --gold-100: #241d10;
+
+  --good: #5cad86;
+  --bad: #d9806f;
+
+  --shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.65);
+  --shadow-lg: 0 28px 54px -18px rgba(0, 0, 0, 0.7);
+
+  color-scheme: dark;
 }
 
 body {
   background: var(--bg);
-  color: var(--fg);
+  color: var(--ink);
+  font-family: var(--font-sans), "Manrope", ui-sans-serif, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.font-serif-display {
+  font-family: var(--font-serif), "Newsreader", serif;
 }
 
 /* ── Scrollbar personalizado ── */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #0f2044;
-  border-radius: 4px;
+  background: color-mix(in srgb, var(--gold-500) 40%, transparent);
+  border-radius: 8px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #c9a84c;
+  background: var(--gold-500);
 }
 
 /* ── Transición base para inputs y botones ── */
@@ -35,4 +94,20 @@ input, select, textarea, button {
   transition-property: color, background-color, border-color, box-shadow, transform;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 200ms;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fadeUp 0.5s ease both;
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.animate-float-slow {
+  animation: floatSlow 10s ease-in-out infinite;
 }

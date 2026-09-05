@@ -13,6 +13,7 @@ import {
   type IResultadoCredito,
 } from '@/lib/financiero'
 import { createOperacion, type OperacionForm } from '@/lib/supabase-creditos'
+import { IconChevronLeft, IconSpinner } from '@/components/ui/icons'
 
 /*
  * Desarrollado por: Keyner Hancco
@@ -180,14 +181,14 @@ export default function NuevoCreditoPage() {
   const segVehMensual = (segVehNum / 100) * precioNum
   const segDesgEstimado = (segDesgNum / 100) * montoFinanciar
 
-  const inputBase = 'w-full px-3 py-2 bg-white rounded-lg outline-none text-sm text-slate-900 placeholder:text-slate-400 transition-all duration-200 focus:ring-2 focus:ring-[#c9a84c]/10 focus:border-[#c9a84c]'
+  const inputBase = 'w-full box-border px-3.5 py-2.5 rounded-[11px] bg-(--surface-alt) outline-none text-sm text-(--ink) placeholder:text-(--ink-mute) transition-all focus:ring-3 focus:ring-(--gold-500)/15'
   const inputCls = (invalid = false) =>
-    `${inputBase} border ${invalid ? 'border-red-400 ring-1 ring-red-300' : 'border-slate-200'}`
+    `${inputBase} border ${invalid ? 'border-(--bad) ring-1 ring-(--bad)/30' : 'border-(--border) focus:border-(--gold-500)'}`
 
-  const labelCls = 'block text-sm font-medium text-slate-700 mb-1'
-  const helpCls = 'text-xs text-slate-400 mt-1'
-  const toggleActiveCls = 'bg-[#0f2044] text-white border-[#0f2044]'
-  const toggleInactiveCls = 'bg-white text-[#0f2044] border-slate-200 hover:bg-slate-50'
+  const labelCls = 'block text-sm font-medium text-(--ink-soft) mb-1'
+  const helpCls = 'text-xs text-(--ink-mute) mt-1'
+  const toggleActiveCls = 'bg-(--navy-900) text-white border-(--navy-900)'
+  const toggleInactiveCls = 'bg-(--surface) text-(--ink) border-(--border) hover:bg-(--surface-alt)'
 
   const handleCalcular = () => {
     setError(null)
@@ -319,34 +320,31 @@ export default function NuevoCreditoPage() {
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <Link href="/creditos" className="text-[#0f2044] hover:text-[#1a3260] text-sm font-medium transition-colors">
-          ← Volver al historial
+        <Link href="/creditos" className="inline-flex items-center gap-1 text-(--ink-mute) hover:text-(--ink) text-sm font-medium transition-colors">
+          <IconChevronLeft size={14} /> Volver al historial
         </Link>
-        <h1 className="text-3xl font-bold text-[#0f2044] mt-1">Generar Crédito FinAutoIQ</h1>
-        <p className="text-slate-500 mt-1">Método francés con período de gracia y compra inteligente</p>
+        <h1 className="font-serif-display italic text-2xl font-semibold text-(--ink) mt-1.5">Generar Crédito FinAutoIQ</h1>
+        <p className="text-(--ink-mute) mt-1 text-sm">Método francés con período de gracia y compra inteligente</p>
       </div>
 
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-          <span className="text-red-500 text-lg shrink-0">⚠</span>
-          <p className="text-sm text-red-700">{error}</p>
+        <div className="p-4 bg-(--bad)/10 border border-(--bad)/30 rounded-lg flex items-start gap-3">
+          <span className="text-(--bad) text-lg shrink-0">⚠</span>
+          <p className="text-sm text-(--bad)">{error}</p>
         </div>
       )}
 
       {loadingData ? (
-        <div className="bg-white rounded-xl shadow-md p-12 text-center">
-          <svg className="animate-spin h-8 w-8 text-[#0f2044] mx-auto mb-3" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-          </svg>
-          <p className="text-slate-500 text-sm">Cargando clientes y vehículos...</p>
+        <div className="bg-(--surface) border border-(--border) rounded-[20px] shadow-(--shadow) p-12 text-center">
+          <IconSpinner className="text-(--navy-900) mx-auto mb-3" size={32} />
+          <p className="text-(--ink-mute) text-sm">Cargando clientes y vehículos...</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-md p-6 space-y-8">
+        <div className="bg-(--surface) border border-(--border) rounded-[20px] shadow-(--shadow) p-6.5 space-y-8">
 
           {/* ── SECCIÓN 1: Participantes ── */}
           <section>
-            <h2 className="text-sm font-bold text-[#0f2044] uppercase tracking-wider border-b border-[#c9a84c]/30 pb-2 mb-4">
+            <h2 className="text-sm font-bold text-(--ink) uppercase tracking-wider border-b border-(--gold-500)/30 pb-2.5 mb-4">
               Participantes
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -359,7 +357,7 @@ export default function NuevoCreditoPage() {
                   ))}
                 </select>
                 {clientes.length === 0 && (
-                  <p className="text-xs text-orange-600 mt-1">No hay clientes. <Link href="/clientes/nuevo" className="underline">Crear uno</Link></p>
+                  <p className="text-xs text-(--gold-700) mt-1">No hay clientes. <Link href="/clientes/nuevo" className="underline">Crear uno</Link></p>
                 )}
               </div>
               <div>
@@ -371,7 +369,7 @@ export default function NuevoCreditoPage() {
                   ))}
                 </select>
                 {vehiculos.length === 0 && (
-                  <p className="text-xs text-orange-600 mt-1">No hay vehículos. <Link href="/vehiculos/nuevo" className="underline">Agregar uno</Link></p>
+                  <p className="text-xs text-(--gold-700) mt-1">No hay vehículos. <Link href="/vehiculos/nuevo" className="underline">Agregar uno</Link></p>
                 )}
               </div>
             </div>
@@ -379,16 +377,16 @@ export default function NuevoCreditoPage() {
 
           {/* ── SECCIÓN 2: Monto y Moneda ── */}
           <section>
-            <h2 className="text-sm font-bold text-[#0f2044] uppercase tracking-wider border-b border-[#c9a84c]/30 pb-2 mb-4">
+            <h2 className="text-sm font-bold text-(--ink) uppercase tracking-wider border-b border-(--gold-500)/30 pb-2.5 mb-4">
               Monto y Moneda
             </h2>
             <div className="space-y-4">
               <div>
                 <label className={labelCls}>Moneda *</label>
-                <div className="flex border border-gray-300 rounded-lg overflow-hidden w-fit">
+                <div className="flex border border-(--border) rounded-lg overflow-hidden w-fit">
                   {(['PEN', 'USD'] as const).map((m) => (
                     <button key={m} type="button" onClick={() => setMoneda(m)}
-                      className={`px-5 py-2 text-sm font-semibold border-r last:border-r-0 transition ${moneda === m ? toggleActiveCls : toggleInactiveCls}`}>
+                      className={`px-5 py-2 text-sm font-semibold border-r last:border-r-0 border-(--border) transition-colors ${moneda === m ? toggleActiveCls : toggleInactiveCls}`}>
                       {m === 'PEN' ? 'S/ Soles' : '$ Dólares'}
                     </button>
                   ))}
@@ -403,7 +401,7 @@ export default function NuevoCreditoPage() {
                     placeholder={moneda === 'PEN' ? 'Ej: 45 000' : 'Ej: 12 000'}
                     min={precioMin} max={precioMax} step="100" className={inputCls(inv.precio)} />
                   <p className={helpCls}>Rango mercado peruano 2025-2026: {simbolo} {precioMin.toLocaleString('es-PE')} – {simbolo} {precioMax.toLocaleString('es-PE')}</p>
-                  {inv.precio && <p className="text-xs text-red-500 mt-0.5">Precio fuera del rango válido ({simbolo} {precioMin.toLocaleString('es-PE')} – {simbolo} {precioMax.toLocaleString('es-PE')})</p>}
+                  {inv.precio && <p className="text-xs text-(--bad) mt-0.5">Precio fuera del rango válido ({simbolo} {precioMin.toLocaleString('es-PE')} – {simbolo} {precioMax.toLocaleString('es-PE')})</p>}
                 </div>
                 <div>
                   <label className={labelCls}>Cuota inicial ({simbolo})</label>
@@ -411,12 +409,12 @@ export default function NuevoCreditoPage() {
                     onChange={(e) => setCuotaInicial(e.target.value)}
                     placeholder="0" min="0" step="0.01" className={inputCls(inv.inicial)} />
                   <p className={helpCls}>Rango típico Perú: 10% – 80% del precio. Mín. 10% exigido por entidades financieras.</p>
-                  {inv.inicial && <p className="text-xs text-red-500 mt-0.5">La cuota inicial debe ser entre 10% y 80% del precio del vehículo</p>}
+                  {inv.inicial && <p className="text-xs text-(--bad) mt-0.5">La cuota inicial debe ser entre 10% y 80% del precio del vehículo</p>}
                 </div>
                 <div>
                   <label className={labelCls}>Monto a financiar (capital)</label>
-                  <div className={`px-3 py-2 rounded-lg border text-sm font-bold ${
-                    montoFinanciar > 0 ? 'bg-[#0f2044]/5 border-[#c9a84c]/50 text-[#0f2044]' : 'bg-red-50 border-red-300 text-red-600'
+                  <div className={`px-3.5 py-2.5 rounded-[11px] border text-sm font-bold ${
+                    montoFinanciar > 0 ? 'bg-(--gold-100) border-(--gold-500)/50 text-(--gold-700)' : 'bg-(--bad)/10 border-(--bad)/40 text-(--bad)'
                   }`}>
                     {fmt(montoFinanciar)}
                   </div>
@@ -428,16 +426,16 @@ export default function NuevoCreditoPage() {
 
           {/* ── SECCIÓN 3: Condiciones del Crédito ── */}
           <section>
-            <h2 className="text-sm font-bold text-[#0f2044] uppercase tracking-wider border-b border-[#c9a84c]/30 pb-2 mb-4">
+            <h2 className="text-sm font-bold text-(--ink) uppercase tracking-wider border-b border-(--gold-500)/30 pb-2.5 mb-4">
               Condiciones del Crédito
             </h2>
             <div className="space-y-4">
               <div>
                 <label className={labelCls}>Tipo de tasa *</label>
-                <div className="flex border border-gray-300 rounded-lg overflow-hidden w-fit">
+                <div className="flex border border-(--border) rounded-lg overflow-hidden w-fit">
                   {(['efectiva', 'nominal'] as const).map((t) => (
                     <button key={t} type="button" onClick={() => setTipoTasa(t)}
-                      className={`px-5 py-2 text-sm font-semibold border-r last:border-r-0 transition ${tipoTasa === t ? toggleActiveCls : toggleInactiveCls}`}>
+                      className={`px-5 py-2 text-sm font-semibold border-r last:border-r-0 border-(--border) transition-colors ${tipoTasa === t ? toggleActiveCls : toggleInactiveCls}`}>
                       {t === 'efectiva' ? 'TEA — Efectiva' : 'TNA — Nominal'}
                     </button>
                   ))}
@@ -457,13 +455,13 @@ export default function NuevoCreditoPage() {
                 <div>
                   <label className={labelCls}>
                     {tipoTasa === 'efectiva' ? 'TEA (%)' : capitalizacion === 12 ? 'TEM (%)' : 'TNA (%)'}
-                    <span className="text-gray-400 font-normal ml-1 text-xs">Rango: {tasaMin}%–{tasaMax}%</span>
+                    <span className="text-(--ink-mute) font-normal ml-1 text-xs">Rango: {tasaMin}%–{tasaMax}%</span>
                   </label>
                   <input type="number" value={tasa} onChange={(e) => setTasa(e.target.value)}
                     placeholder={tipoTasa === 'efectiva' ? '18.50' : capitalizacion === 12 ? '4.40' : '18.50'}
                     min={tasaMin} max={tasaMax} step="0.01" className={inputCls(inv.tasa)} />
                   <p className={helpCls}>Rango Perú 2025-2026: {tasaMin}% – {tasaMax}%. Referencial BCP/BBVA/Scotiabank.</p>
-                  {inv.tasa && <p className="text-xs text-red-500 mt-0.5">Tasa fuera del rango válido para el mercado peruano ({tasaMin}% – {tasaMax}%)</p>}
+                  {inv.tasa && <p className="text-xs text-(--bad) mt-0.5">Tasa fuera del rango válido para el mercado peruano ({tasaMin}% – {tasaMax}%)</p>}
                 </div>
 
                 <div>
@@ -471,7 +469,7 @@ export default function NuevoCreditoPage() {
                   <input type="number" value={plazoMeses} onChange={(e) => setPlazoMeses(e.target.value)}
                     placeholder="48" min="12" max="84" step="1" className={inputCls(inv.plazo)} />
                   <p className={helpCls}>Rango: 12 – 84 meses. Plazos comunes: 24, 36, 48, 60 meses.</p>
-                  {inv.plazo && <p className="text-xs text-red-500 mt-0.5">El plazo debe ser entre 12 y 84 meses</p>}
+                  {inv.plazo && <p className="text-xs text-(--bad) mt-0.5">El plazo debe ser entre 12 y 84 meses</p>}
                 </div>
 
                 <div>
@@ -484,7 +482,7 @@ export default function NuevoCreditoPage() {
 
           {/* ── SECCIÓN 4: Período de Gracia ── */}
           <section>
-            <h2 className="text-sm font-bold text-[#0f2044] uppercase tracking-wider border-b border-[#c9a84c]/30 pb-2 mb-4">
+            <h2 className="text-sm font-bold text-(--ink) uppercase tracking-wider border-b border-(--gold-500)/30 pb-2.5 mb-4">
               Período de Gracia
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -493,23 +491,23 @@ export default function NuevoCreditoPage() {
                 <input type="number" value={mesesGraciaTotal} onChange={(e) => setMesesGraciaTotal(e.target.value)}
                   min="0" max="3" step="1" className={inputCls(inv.gt || inv.gracia)} />
                 <p className={helpCls}>Rango: 0 – 3. Cuota = 0, intereses se capitalizan al saldo.</p>
-                {inv.gt && <p className="text-xs text-red-500 mt-0.5">Máximo 3 meses de gracia total</p>}
-                {!inv.gt && inv.gracia && <p className="text-xs text-red-500 mt-0.5">La suma de gracia debe ser menor al plazo</p>}
+                {inv.gt && <p className="text-xs text-(--bad) mt-0.5">Máximo 3 meses de gracia total</p>}
+                {!inv.gt && inv.gracia && <p className="text-xs text-(--bad) mt-0.5">La suma de gracia debe ser menor al plazo</p>}
               </div>
               <div>
                 <label className={labelCls}>Meses de gracia parcial</label>
                 <input type="number" value={mesesGraciaParcial} onChange={(e) => setMesesGraciaParcial(e.target.value)}
                   min="0" max="3" step="1" className={inputCls(inv.gp || inv.gracia)} />
                 <p className={helpCls}>Rango: 0 – 3. Cuota = solo intereses, saldo no varía.</p>
-                {inv.gp && <p className="text-xs text-red-500 mt-0.5">Máximo 3 meses de gracia parcial</p>}
-                {!inv.gp && inv.gracia && <p className="text-xs text-red-500 mt-0.5">La suma de gracia debe ser menor al plazo</p>}
+                {inv.gp && <p className="text-xs text-(--bad) mt-0.5">Máximo 3 meses de gracia parcial</p>}
+                {!inv.gp && inv.gracia && <p className="text-xs text-(--bad) mt-0.5">La suma de gracia debe ser menor al plazo</p>}
               </div>
             </div>
           </section>
 
           {/* ── SECCIÓN 5: Opciones Avanzadas ── */}
           <section>
-            <h2 className="text-sm font-bold text-[#0f2044] uppercase tracking-wider border-b border-[#c9a84c]/30 pb-2 mb-4">
+            <h2 className="text-sm font-bold text-(--ink) uppercase tracking-wider border-b border-(--gold-500)/30 pb-2.5 mb-4">
               Opciones Avanzadas
             </h2>
             <div className="space-y-4">
@@ -523,10 +521,10 @@ export default function NuevoCreditoPage() {
                       setMontoBalon('')
                     }
                   }}
-                  className="mt-0.5 h-4 w-4 rounded border-slate-300 accent-[#0f2044] cursor-pointer" />
-                <label htmlFor="compra-inteligente" className="text-sm font-semibold text-[#0f2044] cursor-pointer">
+                  className="mt-0.5 h-4 w-4 rounded border-(--border) accent-(--navy-900) cursor-pointer" />
+                <label htmlFor="compra-inteligente" className="text-sm font-semibold text-(--ink) cursor-pointer">
                   Compra Inteligente (Balón / VFG)
-                  <span className="block text-xs text-slate-500 font-normal">
+                  <span className="block text-xs text-(--ink-mute) font-normal">
                     Cuotas periódicas menores. Al final se paga un monto balón (Valor Futuro Garantizado).
                   </span>
                 </label>
@@ -544,7 +542,7 @@ export default function NuevoCreditoPage() {
                       El balón representa el VFG. Rango válido: 10% – 50% del capital.
                     </p>
                   )}
-                  {inv.balon && <p className="text-xs text-red-500 mt-0.5">El balón debe ser entre 10% y 50% del monto a financiar</p>}
+                  {inv.balon && <p className="text-xs text-(--bad) mt-0.5">El balón debe ser entre 10% y 50% del monto a financiar</p>}
                 </div>
               )}
 
@@ -555,7 +553,7 @@ export default function NuevoCreditoPage() {
                   <input type="number" value={cok} onChange={(e) => setCok(e.target.value)}
                     placeholder="15" min="8" max="25" step="0.01" className={inputCls(inv.cok)} />
                   <p className={helpCls}>Rango Perú 2025-2026: 8% – 25%. Sugerido: 15% (ref. renta variable S&P Lima). Usado para el VAN.</p>
-                  {inv.cok && <p className="text-xs text-red-500 mt-0.5">El COK debe estar entre 8% y 25%</p>}
+                  {inv.cok && <p className="text-xs text-(--bad) mt-0.5">El COK debe estar entre 8% y 25%</p>}
                 </div>
 
                 {/* Seguro Vehicular */}
@@ -568,7 +566,7 @@ export default function NuevoCreditoPage() {
                     Rango Perú: 0.20% – 0.51% mensual s/ valor vehículo. BBVA: 0.32%, BCP: ~0.35%, Pacífico: ~0.45%.
                     {precioNum > 0 && <> Est. mensual: <strong>{fmt(segVehMensual)}</strong></>}
                   </p>
-                  {inv.segVeh && <p className="text-xs text-red-500 mt-0.5">Rango válido: 0.20% – 0.51%</p>}
+                  {inv.segVeh && <p className="text-xs text-(--bad) mt-0.5">Rango válido: 0.20% – 0.51%</p>}
                 </div>
 
                 {/* Seguro de Desgravamen */}
@@ -581,16 +579,16 @@ export default function NuevoCreditoPage() {
                     Rango Perú: 0.058% – 0.136% mensual s/ saldo deudor. BBVA individual: 0.069%, con cónyuge: 0.136%, BCP: ~0.080%.
                     {montoFinanciar > 0 && <> Est. mensual fijo: <strong>{fmt(segDesgEstimado)}</strong></>}
                   </p>
-                  {inv.segDesg && <p className="text-xs text-red-500 mt-0.5">Rango válido: 0.058% – 0.136%</p>}
+                  {inv.segDesg && <p className="text-xs text-(--bad) mt-0.5">Rango válido: 0.058% – 0.136%</p>}
                 </div>
               </div>
             </div>
           </section>
 
           {/* Resumen de errores + Botón calcular */}
-          <div className="pt-2 border-t border-gray-100 space-y-3">
+          <div className="pt-2 border-t border-(--border) space-y-3">
             {hayErrores && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 space-y-0.5">
+              <div className="p-3 bg-(--bad)/10 border border-(--bad)/30 rounded-lg text-sm text-(--bad) space-y-0.5">
                 <p className="font-semibold mb-1">Corrige los siguientes campos antes de calcular:</p>
                 {inv.precio && <p>• Precio del vehículo: rango {simbolo} {precioMin.toLocaleString('es-PE')} – {simbolo} {precioMax.toLocaleString('es-PE')}</p>}
                 {inv.inicial && <p>• Cuota inicial: debe ser entre 10% y 80% del precio del vehículo</p>}
@@ -609,7 +607,7 @@ export default function NuevoCreditoPage() {
               type="button"
               onClick={handleCalcular}
               disabled={hayErrores}
-              className="w-full md:w-auto bg-[#0f2044] hover:bg-[#1a3260] active:bg-[#0a1a38] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 px-12 rounded-lg text-base transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.98]"
+              className="w-full md:w-auto bg-(--navy-900) hover:bg-(--navy-800) active:bg-(--navy-950) disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3.5 px-12 rounded-[11px] text-base transition-all shadow-[0_10px_24px_-10px_rgba(15,32,68,.5)] active:scale-[0.98]"
             >
               CALCULAR CRONOGRAMA
             </button>
@@ -619,9 +617,9 @@ export default function NuevoCreditoPage() {
 
       {/* ══════════════ RESULTADOS ══════════════ */}
       {resultado && (
-        <div id="resultados" className="space-y-6">
+        <div id="resultados" className="space-y-6 animate-fade-up">
 
-          <div className="bg-[#0f2044]/5 border border-[#c9a84c]/40 rounded-lg px-5 py-3 text-sm text-[#0f2044] flex items-center gap-3">
+          <div className="bg-(--gold-100) border border-(--gold-500)/40 rounded-lg px-5 py-3 text-sm text-(--gold-700) flex items-center gap-3">
             <span className="text-lg">🔢</span>
             <span>
               <strong>TEM utilizada:</strong> {fmtPct(temCalculado, 6)} &nbsp;|&nbsp;
@@ -634,82 +632,82 @@ export default function NuevoCreditoPage() {
               label="Cuota Total Mensual"
               value={cuotaNormal ? fmt(cuotaNormal.cuotaTotal) : 'Ver cronograma'}
               subtitle={cuotaNormal ? `Cuota francesa: ${fmt(cuotaNormal.cuota)}` : ''}
-              color="gold" big
+              variant="gold" big
             />
-            <MetricCard label="Total a Pagar" value={fmt(resultado.totalPagado)} subtitle="Incluye seguros" color="neutral" big />
-            <MetricCard label="Total Intereses" value={fmt(resultado.totalIntereses)} color="orange" big />
+            <MetricCard label="Total a Pagar" value={fmt(resultado.totalPagado)} subtitle="Incluye seguros" variant="neutral" big />
+            <MetricCard label="Total Intereses" value={fmt(resultado.totalIntereses)} variant="neutral" big />
             <MetricCard
               label="VAN"
               value={fmt(resultado.van)}
               subtitle={resultado.van >= 0 ? 'Favorable para el deudor' : 'Crédito costoso vs COK'}
-              color={resultado.van >= 0 ? 'green' : 'red'}
+              variant={resultado.van >= 0 ? 'good' : 'bad'}
             />
-            <MetricCard label="TIR Mensual" value={fmtPct(resultado.tir)} subtitle="Solo cuota francesa" color="purple" />
-            <MetricCard label="TCEA Anual" value={fmtPct(resultado.tcea, 4)} subtitle="Incluye seguros" color="dark" />
+            <MetricCard label="TIR Mensual" value={fmtPct(resultado.tir)} subtitle="Solo cuota francesa" variant="neutral" />
+            <MetricCard label="TCEA Anual" value={fmtPct(resultado.tcea, 4)} subtitle="Incluye seguros" variant="dark" />
           </div>
 
           {/* Leyenda */}
-          <div className="flex flex-wrap gap-5 text-xs text-slate-500">
+          <div className="flex flex-wrap gap-5 text-xs text-(--ink-mute)">
             <span className="flex items-center gap-1.5">
-              <span className="inline-block w-3 h-3 rounded bg-yellow-100 border border-yellow-300"></span>
+              <span className="inline-block w-3 h-3 rounded bg-[#fef3c7]" />
               Gracia total — cuota = 0, saldo crece
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="inline-block w-3 h-3 rounded bg-blue-100 border border-blue-300"></span>
+              <span className="inline-block w-3 h-3 rounded bg-blue-100" />
               Gracia parcial — solo intereses
             </span>
             {esCompraInteligente && (
-              <span className="flex items-center gap-1.5 text-[#0f2044] font-semibold">
+              <span className="flex items-center gap-1.5 text-(--navy-900) font-semibold">
                 ⚡ Compra inteligente — la última cuota incluye el pago completo del balón (saldo final = 0)
               </span>
             )}
           </div>
 
           {/* Tabla cronograma */}
-          <div className="bg-white rounded-xl shadow-md overflow-hidden">
-            <div className="px-6 py-4 flex items-center justify-between bg-[#0f2044]">
-              <h2 className="text-sm font-bold text-white uppercase tracking-wider">Cronograma de Pagos</h2>
+          <div className="bg-(--surface) border border-(--border) rounded-[20px] shadow-(--shadow) overflow-hidden">
+            <div className="px-6 py-4 flex items-center justify-between bg-(--navy-900)">
+              <h2 className="text-sm font-bold text-white uppercase tracking-wider m-0">Cronograma de Pagos</h2>
               <span className="text-xs text-white/60">{resultado.cronograma.length} cuotas</span>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full text-sm border-collapse min-w-230">
                 <thead>
-                  <tr className="bg-[#1a3260]/80">
+                  <tr className="bg-(--navy-800)">
                     {['N°', 'Fecha', 'Saldo Inicial', 'Interés', 'Amortización', 'Cuota', 'Seg. Veh.', 'Seg. Desgr.', 'Total Cuota', 'Saldo Final', 'Tipo'].map(
                       (h) => (
-                        <th key={h} className="px-3 py-2.5 text-xs font-semibold text-white/90 whitespace-nowrap text-right first:text-left last:text-center">
+                        <th key={h} className="px-3 py-2.75 text-xs font-semibold text-white/90 whitespace-nowrap text-right first:text-left last:text-center">
                           {h}
                         </th>
                       )
                     )}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {resultado.cronograma.map((fila, idx) => {
+                <tbody>
+                  {resultado.cronograma.map((fila) => {
                     const isGT = fila.tipoFila === 'gracia_total'
                     const isGP = fila.tipoFila === 'gracia_parcial'
-                    const rowBg = isGT ? 'bg-yellow-50' : isGP ? 'bg-blue-50' : idx % 2 === 0 ? 'bg-white' : 'bg-[#f8fafc]'
+                    const rowBg = isGT ? 'bg-[#fffbeb]' : isGP ? 'bg-blue-50' : undefined
                     const badgeText = isGT ? 'G. Total' : isGP ? 'G. Parcial' : 'Normal'
                     const badgeCls = isGT
-                      ? 'bg-yellow-100 text-yellow-800 border border-yellow-200'
+                      ? 'bg-[#fef3c7] text-[#92660a]'
                       : isGP
-                      ? 'bg-blue-100 text-blue-800 border border-blue-200'
-                      : 'bg-slate-100 text-slate-600 border border-slate-200'
+                      ? 'bg-blue-100 text-blue-800'
+                      : 'bg-(--surface-alt) text-(--ink-mute)'
 
                     return (
-                      <tr key={fila.numeroCuota} className={`${rowBg} hover:bg-[#fefce8] transition-colors duration-100`}>
-                        <td className="px-3 py-2 font-semibold text-[#0f2044]">{fila.numeroCuota}</td>
-                        <td className="px-3 py-2 text-right text-slate-500 whitespace-nowrap text-xs">{getFechaFila(fila.numeroCuota)}</td>
-                        <td className="px-3 py-2 text-right tabular-nums text-slate-700">{fila.saldoInicial.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
-                        <td className="px-3 py-2 text-right tabular-nums font-medium" style={{ color: '#b8960c' }}>{fila.interes.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
-                        <td className="px-3 py-2 text-right tabular-nums text-[#0f2044] font-medium">{fila.amortizacion.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
-                        <td className="px-3 py-2 text-right tabular-nums text-slate-700">{fila.cuota.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
-                        <td className="px-3 py-2 text-right tabular-nums text-emerald-700">{fila.seguroVehicular.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
-                        <td className="px-3 py-2 text-right tabular-nums text-emerald-700">{fila.seguroDesgravamen.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
-                        <td className="px-3 py-2 text-right tabular-nums font-bold text-slate-900">{fila.cuotaTotal.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
-                        <td className="px-3 py-2 text-right tabular-nums text-slate-600">{fila.saldoFinal.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
-                        <td className="px-3 py-2 text-center">
-                          <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${badgeCls}`}>{badgeText}</span>
+                      <tr key={fila.numeroCuota} className={`border-t border-(--border) hover:bg-(--gold-100) transition-colors ${rowBg ?? ''}`}>
+                        <td className="px-3 py-2.25 font-semibold text-(--ink)">{fila.numeroCuota}</td>
+                        <td className="px-3 py-2.25 text-right text-(--ink-mute) whitespace-nowrap text-xs">{getFechaFila(fila.numeroCuota)}</td>
+                        <td className="px-3 py-2.25 text-right tabular-nums text-(--ink-soft)">{fila.saldoInicial.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
+                        <td className="px-3 py-2.25 text-right tabular-nums font-semibold text-(--gold-600)">{fila.interes.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
+                        <td className="px-3 py-2.25 text-right tabular-nums text-(--ink) font-semibold">{fila.amortizacion.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
+                        <td className="px-3 py-2.25 text-right tabular-nums text-(--ink-soft)">{fila.cuota.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
+                        <td className="px-3 py-2.25 text-right tabular-nums text-(--good)">{fila.seguroVehicular.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
+                        <td className="px-3 py-2.25 text-right tabular-nums text-(--good)">{fila.seguroDesgravamen.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
+                        <td className="px-3 py-2.25 text-right tabular-nums font-bold text-(--ink)">{fila.cuotaTotal.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
+                        <td className="px-3 py-2.25 text-right tabular-nums text-(--ink-soft)">{fila.saldoFinal.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</td>
+                        <td className="px-3 py-2.25 text-center">
+                          <span className={`text-[10px] px-2.25 py-0.75 rounded-full font-bold ${badgeCls}`}>{badgeText}</span>
                         </td>
                       </tr>
                     )
@@ -725,11 +723,11 @@ export default function NuevoCreditoPage() {
               type="button"
               onClick={handleGuardar}
               disabled={guardando}
-              className="bg-[#c9a84c] hover:bg-[#b8960c] disabled:bg-[#c9a84c]/50 text-[#0f2044] font-bold py-3 px-10 rounded-lg text-base transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.98]"
+              className="bg-linear-to-br from-(--gold-400) to-(--gold-600) disabled:opacity-50 text-(--navy-950) font-bold py-3.5 px-10 rounded-[11px] text-base transition-all shadow-[0_10px_24px_-10px_rgba(198,160,82,.5)] active:scale-[0.98] hover:-translate-y-0.5"
             >
               {guardando ? 'Guardando...' : 'GUARDAR OPERACIÓN'}
             </button>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-(--ink-mute)">
               Se guardará la operación y el cronograma completo en la base de datos.
             </p>
           </div>
@@ -740,26 +738,44 @@ export default function NuevoCreditoPage() {
 }
 
 function MetricCard({
-  label, value, subtitle, color, big,
+  label, value, subtitle, variant, big,
 }: {
-  label: string; value: string; subtitle?: string; color: string; big?: boolean
+  label: string; value: string; subtitle?: string; variant: string; big?: boolean
 }) {
-  type CardStyle = { container: string; label: string; value: string }
-  const palette: Record<string, CardStyle> = {
-    gold:    { container: 'bg-amber-50 border-amber-200',   label: 'text-amber-700',  value: 'text-slate-900' },
-    orange:  { container: 'bg-orange-50 border-orange-200', label: 'text-orange-700', value: 'text-orange-900' },
-    green:   { container: 'bg-green-50 border-green-200',   label: 'text-green-700',  value: 'text-green-900' },
-    red:     { container: 'bg-red-50 border-red-200',       label: 'text-red-700',    value: 'text-red-900' },
-    purple:  { container: 'bg-purple-50 border-purple-200', label: 'text-purple-700', value: 'text-purple-900' },
-    dark:    { container: 'bg-slate-100 border-slate-300',  label: 'text-slate-600',  value: 'text-slate-900' },
-    neutral: { container: 'bg-slate-50 border-slate-200',   label: 'text-slate-500',  value: 'text-slate-900' },
+  if (variant === 'gold') {
+    return (
+      <div className="rounded-xl p-4 transition-transform hover:-translate-y-0.5 bg-linear-to-br from-(--gold-400) to-(--gold-600) shadow-[0_10px_24px_-12px_rgba(198,160,82,.5)]">
+        <div className="text-xs font-semibold mb-1 text-(--navy-950)/75">{label}</div>
+        <div className={`font-bold leading-tight break-all tabular-nums text-(--navy-950) ${big ? 'text-2xl' : 'text-base'}`}>{value}</div>
+        {subtitle && <div className="text-xs text-(--navy-950)/70 mt-1">{subtitle}</div>}
+      </div>
+    )
   }
-  const c = palette[color] ?? palette.neutral
+  if (variant === 'dark') {
+    return (
+      <div className="rounded-xl p-4 transition-transform hover:-translate-y-0.5 bg-linear-to-br from-(--navy-900) to-(--navy-950)">
+        <div className="text-xs font-semibold mb-1 text-(--gold-400)">{label}</div>
+        <div className={`font-bold leading-tight break-all tabular-nums text-white ${big ? 'text-2xl' : 'text-base'}`}>{value}</div>
+        {subtitle && <div className="text-xs text-white/60 mt-1">{subtitle}</div>}
+      </div>
+    )
+  }
+  if (variant === 'good' || variant === 'bad') {
+    const goodCls = 'border rounded-xl p-4 transition-shadow hover:shadow-(--shadow) bg-(--good)/10 border-(--good)/30'
+    const badCls = 'border rounded-xl p-4 transition-shadow hover:shadow-(--shadow) bg-(--bad)/10 border-(--bad)/30'
+    return (
+      <div className={variant === 'good' ? goodCls : badCls}>
+        <div className={`text-xs font-semibold mb-1 ${variant === 'good' ? 'text-(--good)' : 'text-(--bad)'}`}>{label}</div>
+        <div className={`font-bold leading-tight break-all tabular-nums ${variant === 'good' ? 'text-(--good)' : 'text-(--bad)'} ${big ? 'text-2xl' : 'text-base'}`}>{value}</div>
+        {subtitle && <div className="text-xs text-(--ink-soft) mt-1">{subtitle}</div>}
+      </div>
+    )
+  }
   return (
-    <div className={`border rounded-xl p-4 hover:shadow-md transition-shadow duration-200 ${c.container}`}>
-      <div className={`text-xs font-semibold mb-1 ${c.label}`}>{label}</div>
-      <div className={`font-bold leading-tight break-all tabular-nums ${c.value} ${big ? 'text-2xl' : 'text-base'}`}>{value}</div>
-      {subtitle && <div className="text-xs text-slate-600 mt-1">{subtitle}</div>}
+    <div className="border border-(--border) rounded-xl p-4 transition-shadow hover:shadow-(--shadow) bg-(--surface-alt)">
+      <div className="text-xs font-semibold mb-1 text-(--ink-mute)">{label}</div>
+      <div className={`font-bold leading-tight break-all tabular-nums text-(--ink) ${big ? 'text-2xl' : 'text-base'}`}>{value}</div>
+      {subtitle && <div className="text-xs text-(--ink-soft) mt-1">{subtitle}</div>}
     </div>
   )
 }

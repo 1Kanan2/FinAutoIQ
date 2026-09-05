@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
+import { IconPerson, IconCar, IconDoc, IconWallet, IconPersonSolo, IconArrowRight, IconSpinner } from '@/components/ui/icons'
 
 /*
  * Desarrollado por: Keyner Hancco
@@ -26,15 +27,6 @@ interface UltimaOp {
   created_at: string
   clientes: { nombre: string; apellidos: string } | null
   vehiculos: { marca: string; modelo: string } | null
-}
-
-function Spinner() {
-  return (
-    <svg className="animate-spin h-7 w-7 text-[#0f2044] mx-auto" fill="none" viewBox="0 0 24 24">
-      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-    </svg>
-  )
 }
 
 export default function DashboardPage() {
@@ -87,134 +79,158 @@ export default function DashboardPage() {
   const fmtMonto = (n: number, moneda: 'PEN' | 'USD') =>
     `${moneda === 'PEN' ? 'S/' : '$'} ${n.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 
-  return (
-    <div className="space-y-8">
-      {/* Encabezado */}
-      <div>
-        <h1 className="text-3xl font-bold text-[#0f2044]">Dashboard</h1>
-        {userEmail && (
-          <p className="text-slate-500 text-sm mt-1">
-            Bienvenido, <span className="font-medium text-[#0f2044]">{userEmail}</span>
-          </p>
-        )}
-      </div>
+  const kpis = [
+    { icon: IconPerson, value: (metricas?.totalClientes ?? 0).toLocaleString('es-PE'), label: 'Clientes registrados' },
+    { icon: IconCar, value: (metricas?.totalVehiculos ?? 0).toLocaleString('es-PE'), label: 'Vehículos en inventario' },
+    { icon: IconDoc, value: (metricas?.totalOperaciones ?? 0).toLocaleString('es-PE'), label: 'Operaciones realizadas' },
+  ]
 
-      {/* Métricas */}
+  const primerosPasos = [
+    { n: 1, icon: IconPerson, title: 'Registra clientes', desc: 'Crea la ficha de cada cliente para vincularla a sus operaciones.', href: '/clientes' },
+    { n: 2, icon: IconCar, title: 'Añade vehículos', desc: 'Suma unidades al inventario disponible para financiar.', href: '/vehiculos' },
+    { n: 3, icon: IconDoc, title: 'Genera un crédito', desc: 'Cronograma francés con VAN, TIR y TCEA calculados al instante.', href: '/creditos/nuevo', dark: true },
+  ]
+
+  return (
+    <div className="space-y-8.5">
+      <p className="text-(--ink-mute) text-sm -mt-1">
+        {userEmail && <>Bienvenido, <span className="text-(--ink) font-semibold">{userEmail}</span></>}
+      </p>
+
+      {/* KPI CARDS */}
       {loading ? (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid gap-4.5" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-28 bg-white rounded-xl border border-slate-100 animate-pulse" />
+            <div key={i} className="h-35 bg-(--surface) rounded-[20px] border border-(--border) animate-pulse" />
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            { icon: '👥', value: (metricas?.totalClientes ?? 0).toLocaleString('es-PE'), label: 'Clientes registrados' },
-            { icon: '🚗', value: (metricas?.totalVehiculos ?? 0).toLocaleString('es-PE'), label: 'Vehículos en inventario' },
-            { icon: '📋', value: (metricas?.totalOperaciones ?? 0).toLocaleString('es-PE'), label: 'Operaciones realizadas' },
-          ].map(({ icon, value, label }) => (
-            <div key={label} className="bg-white rounded-xl shadow-md border-l-[3px] border-[#c9a84c] p-5 hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
-              <div className="text-2xl mb-2">{icon}</div>
-              <div className="text-2xl font-bold text-[#0f2044] tabular-nums">{value}</div>
-              <div className="text-xs text-slate-500 mt-0.5">{label}</div>
+        <div className="grid gap-4.5" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
+          {kpis.map(({ icon: Icon, value, label }, i) => (
+            <div
+              key={label}
+              className="bg-(--surface) border border-(--border) rounded-[20px] p-6.5 shadow-(--shadow) relative overflow-hidden animate-fade-up"
+              style={{ animationDelay: `${i * 0.05}s` }}
+            >
+              <div className="absolute -top-7.5 -right-7.5 w-25 h-25 rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--gold-500)_14%,transparent),transparent_70%)]" />
+              <Icon size={22} className="text-(--gold-600) mb-4" />
+              <div className="font-serif-display text-4xl font-semibold text-(--ink) leading-none tabular-nums">{value}</div>
+              <div className="text-[12.5px] text-(--ink-mute) mt-2 font-medium">{label}</div>
             </div>
           ))}
+
           {/* Cartera */}
-          <div className="bg-white rounded-xl shadow-md border-l-[3px] border-[#c9a84c] p-5 hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
-            <div className="text-2xl mb-2">💰</div>
-            {(metricas?.carteraPEN ?? 0) > 0 && (
-              <div className="text-lg font-bold text-[#0f2044] tabular-nums leading-tight">
-                S/ {(metricas!.carteraPEN).toLocaleString('es-PE', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-              </div>
-            )}
-            {(metricas?.carteraUSD ?? 0) > 0 && (
-              <div className="text-lg font-bold text-[#0f2044] tabular-nums leading-tight">
-                $ {(metricas!.carteraUSD).toLocaleString('es-PE', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-              </div>
-            )}
-            {!(metricas?.carteraPEN) && !(metricas?.carteraUSD) && (
-              <div className="text-lg font-bold text-[#0f2044]">S/ 0</div>
-            )}
-            <div className="text-xs text-slate-500 mt-0.5">Monto total en cartera</div>
+          <div
+            className="bg-linear-to-br from-(--navy-900) to-(--navy-800) rounded-[20px] p-6.5 relative overflow-hidden shadow-[0_20px_50px_-20px_rgba(15,31,61,.55)] animate-fade-up"
+            style={{ animationDelay: '.15s' }}
+          >
+            <div className="absolute -top-7.5 -right-7.5 w-30 h-30 rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--gold-500)_28%,transparent),transparent_70%)]" />
+            <IconWallet size={22} className="text-(--gold-400) mb-4" />
+            <div className="font-serif-display text-2xl font-semibold text-white leading-tight tabular-nums">
+              {(metricas?.carteraPEN ?? 0) > 0 && <div>S/ {(metricas!.carteraPEN).toLocaleString('es-PE', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</div>}
+              {(metricas?.carteraUSD ?? 0) > 0 && <div className="text-lg opacity-75 mt-0.5">$ {(metricas!.carteraUSD).toLocaleString('es-PE', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</div>}
+              {!(metricas?.carteraPEN) && !(metricas?.carteraUSD) && <div>S/ 0</div>}
+            </div>
+            <div className="text-[12.5px] text-(--gold-400) mt-2.5 font-medium">Monto total en cartera</div>
           </div>
         </div>
       )}
 
       {/* Accesos rápidos */}
       <div>
-        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Accesos rápidos</p>
+        <p className="text-[11px] font-bold text-(--ink-mute) uppercase tracking-[1.5px] mb-3">Accesos rápidos</p>
         <div className="flex flex-wrap gap-3">
-          {[
-            { href: '/clientes/nuevo', label: '+ Nuevo Cliente', color: 'bg-[#0f2044] hover:bg-[#1a3260]' },
-            { href: '/vehiculos/nuevo', label: '+ Nuevo Vehículo', color: 'bg-[#0f2044] hover:bg-[#1a3260]' },
-            { href: '/creditos/nuevo', label: '+ Nuevo Crédito', color: 'bg-[#c9a84c] hover:bg-[#b8960c] text-[#0f2044]' },
-          ].map(({ href, label, color }) => (
-            <Link
-              key={href}
-              href={href}
-              className={`inline-flex items-center gap-2 ${color} font-semibold py-2.5 px-5 rounded-lg transition-all duration-200 active:scale-95 text-sm text-white shadow-sm hover:shadow-md`}
-            >
-              {label}
-            </Link>
-          ))}
+          <Link
+            href="/clientes/nuevo"
+            className="bg-(--navy-900) hover:bg-(--navy-800) text-white font-semibold py-3 px-5.5 rounded-xl text-[13.5px] shadow-[0_8px_20px_-8px_rgba(15,32,68,.4)] transition-all hover:-translate-y-0.5"
+          >
+            + Nuevo Cliente
+          </Link>
+          <Link
+            href="/vehiculos/nuevo"
+            className="bg-(--navy-900) hover:bg-(--navy-800) text-white font-semibold py-3 px-5.5 rounded-xl text-[13.5px] shadow-[0_8px_20px_-8px_rgba(15,32,68,.4)] transition-all hover:-translate-y-0.5"
+          >
+            + Nuevo Vehículo
+          </Link>
+          <Link
+            href="/creditos/nuevo"
+            className="bg-linear-to-br from-(--gold-400) to-(--gold-600) text-(--navy-950) font-bold py-3 px-5.5 rounded-xl text-[13.5px] shadow-[0_8px_20px_-8px_rgba(198,160,82,.5)] transition-all hover:-translate-y-0.5"
+          >
+            + Nuevo Crédito
+          </Link>
         </div>
       </div>
 
-      {/* Últimas 5 operaciones */}
+      {/* Últimas operaciones */}
       <div>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-bold text-[#0f2044]">Últimas operaciones</h2>
-          <Link href="/creditos" className="text-sm text-[#c9a84c] hover:text-[#b8960c] font-semibold transition-colors">
+        <div className="flex items-center justify-between mb-3.5">
+          <h2 className="font-serif-display italic text-lg font-semibold text-(--ink)">Últimas operaciones</h2>
+          <Link href="/creditos" className="text-[13px] font-bold text-(--gold-600) hover:text-(--gold-500) transition-colors">
             Ver todas →
           </Link>
         </div>
 
         {loading ? (
-          <div className="bg-white rounded-xl shadow-md p-10 flex justify-center">
-            <Spinner />
+          <div className="bg-(--surface) border border-(--border) rounded-[20px] shadow-(--shadow) p-10 flex justify-center">
+            <IconSpinner className="text-(--navy-900)" size={28} />
           </div>
         ) : ultimasOps.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-md border-l-[3px] border-[#c9a84c] py-14 text-center">
-            <div className="text-5xl mb-3">📋</div>
-            <p className="text-slate-500 text-sm">No hay operaciones registradas aún.</p>
-            <Link href="/creditos/nuevo" className="inline-block mt-4 text-[#c9a84c] hover:text-[#b8960c] font-semibold text-sm transition-colors">
+          <div className="bg-(--surface) border border-(--border) rounded-[20px] shadow-(--shadow) py-14 text-center">
+            <IconDoc size={40} className="text-(--ink-mute) mx-auto mb-3" />
+            <p className="text-(--ink-mute) text-sm">No hay operaciones registradas aún.</p>
+            <Link href="/creditos/nuevo" className="inline-block mt-4 text-(--gold-600) hover:text-(--gold-500) font-semibold text-sm transition-colors">
               Generar el primer crédito →
             </Link>
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-md overflow-hidden">
+          <div className="bg-(--surface) border border-(--border) rounded-[20px] shadow-(--shadow) overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full text-[13.5px] border-collapse min-w-170">
                 <thead>
-                  <tr className="bg-[#0f2044]">
-                    {['Cliente', 'Vehículo', 'Monto Financiado', 'TCEA', 'Fecha', ''].map((h) => (
-                      <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider whitespace-nowrap">
+                  <tr>
+                    {['Cliente', 'Vehículo', 'Monto', 'TCEA', 'Fecha', ''].map((h, i) => (
+                      <th
+                        key={h}
+                        className={`px-5.5 py-3.5 text-[10px] font-bold text-(--ink-mute) uppercase tracking-[1.3px] border-b border-(--border) whitespace-nowrap ${
+                          i === 2 ? 'text-right' : i === 3 ? 'text-center' : 'text-left'
+                        }`}
+                      >
                         {h}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {ultimasOps.map((op, i) => (
-                    <tr key={op.id} className={`${i % 2 === 0 ? 'bg-white' : 'bg-[#f8fafc]'} hover:bg-[#fefce8] transition-colors duration-150`}>
-                      <td className="px-4 py-3 font-semibold text-slate-900 whitespace-nowrap">
-                        {op.clientes?.nombre} {op.clientes?.apellidos}
+                <tbody>
+                  {ultimasOps.map((op) => (
+                    <tr key={op.id} className="hover:bg-(--gold-100) transition-colors">
+                      <td className="px-5.5 py-3.5 whitespace-nowrap border-b border-(--border)">
+                        <div className="flex items-center gap-3">
+                          <span className="w-8.5 h-8.5 shrink-0 rounded-[11px] bg-linear-to-br from-(--navy-800) to-(--navy-950) text-(--gold-400) flex items-center justify-center">
+                            <IconPersonSolo />
+                          </span>
+                          <span className="font-bold text-(--ink)">{op.clientes?.nombre} {op.clientes?.apellidos}</span>
+                        </div>
                       </td>
-                      <td className="px-4 py-3 text-slate-600 whitespace-nowrap">
+                      <td className="px-5.5 py-3.5 text-(--ink-soft) whitespace-nowrap border-b border-(--border)">
                         {op.vehiculos?.marca} {op.vehiculos?.modelo}
                       </td>
-                      <td className="px-4 py-3 font-semibold text-[#0f2044] tabular-nums whitespace-nowrap">
+                      <td className="px-5.5 py-3.5 font-bold text-(--ink) tabular-nums whitespace-nowrap text-right border-b border-(--border)">
                         {fmtMonto(op.monto_financiar, op.moneda)}
                       </td>
-                      <td className="px-4 py-3 font-bold tabular-nums text-amber-700">
-                        {(op.tcea * 100).toFixed(2)}%
+                      <td className="px-5.5 py-3.5 text-center whitespace-nowrap border-b border-(--border)">
+                        <span className="inline-block px-3 py-1 rounded-full bg-(--gold-100) text-(--gold-700) font-bold text-xs">
+                          {(op.tcea * 100).toFixed(2)}%
+                        </span>
                       </td>
-                      <td className="px-4 py-3 text-slate-500 whitespace-nowrap">
+                      <td className="px-5.5 py-3.5 text-(--ink-mute) whitespace-nowrap border-b border-(--border)">
                         {new Date(op.created_at).toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                       </td>
-                      <td className="px-4 py-3">
-                        <Link href={`/creditos/${op.id}`} className="text-[#0f2044] hover:text-[#1a3260] font-semibold whitespace-nowrap transition-colors">
-                          Ver detalle →
+                      <td className="px-5.5 py-3.5 text-right whitespace-nowrap border-b border-(--border)">
+                        <Link
+                          href={`/creditos/${op.id}`}
+                          className="inline-flex items-center gap-1.5 font-bold text-xs text-white bg-(--navy-900) hover:bg-(--navy-800) py-1.5 px-3 rounded-lg transition-colors"
+                        >
+                          Ver <IconArrowRight />
                         </Link>
                       </td>
                     </tr>
@@ -226,14 +242,31 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {/* Guía */}
-      <div className="bg-[#0f2044]/5 border-l-4 border-[#c9a84c] p-5 rounded-lg">
-        <h3 className="text-sm font-bold text-[#0f2044] mb-2">Primeros pasos</h3>
-        <ul className="text-slate-600 space-y-1 text-sm">
-          <li>✓ Registra clientes desde <Link href="/clientes" className="text-[#c9a84c] hover:text-[#b8960c] font-medium transition-colors">Clientes</Link></li>
-          <li>✓ Añade vehículos al inventario desde <Link href="/vehiculos" className="text-[#c9a84c] hover:text-[#b8960c] font-medium transition-colors">Vehículos</Link></li>
-          <li>✓ Genera créditos con cronograma francés, VAN, TIR y TCEA desde <Link href="/creditos/nuevo" className="text-[#c9a84c] hover:text-[#b8960c] font-medium transition-colors">Nuevo Crédito</Link></li>
-        </ul>
+      {/* Primeros pasos */}
+      <div>
+        <p className="text-[11px] font-bold text-(--ink-mute) uppercase tracking-[1.5px] mb-3.5">Primeros pasos</p>
+        <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
+          {primerosPasos.map(({ n, icon: Icon, title, desc, href, dark }) => (
+            <Link
+              key={n}
+              href={href}
+              className={`rounded-2xl p-5 flex flex-col gap-2.5 transition-all hover:-translate-y-1 ${
+                dark
+                  ? 'bg-linear-to-br from-(--navy-900) to-(--navy-950) shadow-[0_20px_40px_-18px_rgba(15,32,68,.5)]'
+                  : 'bg-(--surface) border border-(--border) shadow-(--shadow) hover:shadow-(--shadow-lg)'
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <span className={`w-8 h-8 rounded-[10px] flex items-center justify-center font-extrabold text-[13px] ${dark ? 'bg-(--gold-500)/18 text-(--gold-400)' : 'bg-(--gold-100) text-(--gold-700)'}`}>
+                  {n}
+                </span>
+                <Icon size={17} className={dark ? 'text-(--gold-400)' : 'text-(--ink-mute)'} />
+              </div>
+              <p className={`text-sm font-bold m-0 ${dark ? 'text-white' : 'text-(--ink)'}`}>{title}</p>
+              <p className={`text-[12.5px] m-0 leading-relaxed ${dark ? 'text-white/55' : 'text-(--ink-mute)'}`}>{desc}</p>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   )
