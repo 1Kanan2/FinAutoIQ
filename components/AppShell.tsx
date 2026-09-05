@@ -5,7 +5,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
 import ThemeToggle from '@/components/ThemeToggle'
-import { IconBrand, IconGrid, IconPerson, IconCar, IconDoc, IconChevronLeft, IconMenu, IconClose } from '@/components/ui/icons'
+import { IconGrid, IconPerson, IconCar, IconDoc, IconChevronLeft, IconMenu, IconClose } from '@/components/ui/icons'
 
 /*
  * Desarrollado por: Keyner Hancco
@@ -116,18 +116,18 @@ function Shell({ pathname, children }: { pathname: string; children: React.React
           w-66 ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
       >
         <div className="flex items-center gap-3 px-5 py-6 whitespace-nowrap">
-          <div className="w-9.5 h-9.5 shrink-0 rounded-[11px] bg-linear-to-br from-(--gold-400) to-(--gold-600) flex items-center justify-center shadow-[0_6px_16px_-4px_rgba(198,160,82,.5)]">
-            <IconBrand size={20} />
+          <div className="w-9.5 h-9.5 shrink-0 rounded-[11px] overflow-hidden shadow-[0_6px_16px_-4px_rgba(198,160,82,.5)] transition-transform hover:scale-105">
+            <img src="/LogoFinAutoIQ.png" alt="FinAutoIQ" className="w-full h-full object-cover" />
           </div>
           {!collapsed && (
-            <div className="overflow-hidden">
+            <div className="min-w-0 flex-1">
               <div className="font-serif-display italic text-[19px] font-semibold text-white leading-tight tracking-[.2px]">FinAutoIQ</div>
-              <div className="text-[9.5px] tracking-[2px] text-(--gold-500) uppercase mt-0.5">Private Banking Suite</div>
+              <div className="text-[9px] tracking-[1px] text-(--gold-500) uppercase mt-0.5 truncate">Simulador de Crédito Vehicular</div>
             </div>
           )}
           <button
             onClick={() => setMobileOpen(false)}
-            className="ml-auto md:hidden text-white/60 hover:text-white p-1"
+            className="ml-auto md:hidden text-white/60 hover:text-white hover:scale-110 active:scale-90 transition-transform p-1"
             aria-label="Cerrar menú"
           >
             <IconClose size={16} />
@@ -142,13 +142,13 @@ function Shell({ pathname, children }: { pathname: string; children: React.React
                 key={href}
                 href={href}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-[11px] text-[13.5px] font-semibold whitespace-nowrap border-l-2 transition-colors ${
+                className={`group flex items-center gap-3 px-3.5 py-2.5 rounded-[11px] text-[13.5px] font-semibold whitespace-nowrap border-l-2 transition-all duration-200 active:scale-[0.98] ${
                   active
                     ? 'bg-linear-to-r from-[color-mix(in_srgb,var(--gold-500)_16%,transparent)] to-transparent border-(--gold-500) text-white'
-                    : 'border-transparent text-white/62 hover:text-white hover:bg-white/5'
+                    : 'border-transparent text-white/62 hover:text-white hover:bg-white/5 hover:translate-x-1'
                 }`}
               >
-                <Icon className="shrink-0" />
+                <Icon className="shrink-0 transition-transform duration-200 group-hover:scale-110" />
                 {!collapsed && <span>{label}</span>}
               </Link>
             )
@@ -157,7 +157,7 @@ function Shell({ pathname, children }: { pathname: string; children: React.React
 
         <button
           onClick={toggleCollapse}
-          className="hidden md:flex mx-3 mb-4.5 mt-2.5 p-2.5 border border-white/10 bg-white/5 rounded-[10px] text-white/55 hover:bg-white/10 hover:text-white items-center justify-center cursor-pointer"
+          className="hidden md:flex mx-3 mb-4.5 mt-2.5 p-2.5 border border-white/10 bg-white/5 rounded-[10px] text-white/55 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-90 items-center justify-center cursor-pointer transition-all duration-200"
           aria-label={collapsed ? 'Expandir menú' : 'Colapsar menú'}
         >
           <IconChevronLeft size={16} className={`transition-transform duration-250 ${collapsed ? 'rotate-180' : ''}`} />
@@ -171,7 +171,7 @@ function Shell({ pathname, children }: { pathname: string; children: React.React
           <div className="flex items-center gap-3 min-w-0">
             <button
               onClick={() => setMobileOpen(true)}
-              className="md:hidden text-(--ink-mute) hover:text-(--ink) p-1 shrink-0"
+              className="md:hidden text-(--ink-mute) hover:text-(--ink) hover:scale-110 active:scale-90 transition-transform p-1 shrink-0"
               aria-label="Abrir menú"
             >
               <IconMenu />
@@ -187,7 +187,7 @@ function Shell({ pathname, children }: { pathname: string; children: React.React
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setDropdownOpen((v) => !v)}
-                  className="flex items-center gap-2.5 pl-1.5 sm:pr-3.5 pr-1.5 py-1.5 rounded-xl bg-(--surface-alt) border border-(--border) cursor-pointer hover:brightness-105"
+                  className="flex items-center gap-2.5 pl-1.5 sm:pr-3.5 pr-1.5 py-1.5 rounded-xl bg-(--surface-alt) border border-(--border) cursor-pointer transition-all duration-200 hover:brightness-105 hover:-translate-y-px hover:shadow-sm active:scale-[0.97]"
                 >
                   <span className="w-7.5 h-7.5 rounded-[9px] bg-linear-to-br from-(--gold-400) to-(--gold-600) text-(--navy-950) font-bold text-[13px] flex items-center justify-center shrink-0">
                     {user.email[0].toUpperCase()}
@@ -195,14 +195,14 @@ function Shell({ pathname, children }: { pathname: string; children: React.React
                   <span className="hidden sm:inline text-[13px] font-semibold text-(--ink) max-w-[180px] truncate">{user.email}</span>
                 </button>
                 {dropdownOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-52 bg-(--surface) border border-(--border) rounded-xl shadow-(--shadow) py-1 z-50">
+                  <div className="absolute right-0 top-full mt-2 w-52 bg-(--surface) border border-(--border) rounded-xl shadow-(--shadow) py-1 z-50 animate-fade-up">
                     <div className="px-4 py-2.5 border-b border-(--border)">
                       <p className="text-[10px] text-(--ink-mute) uppercase tracking-wider">Sesión activa</p>
                       <p className="text-sm font-medium text-(--ink) truncate mt-0.5">{user.email}</p>
                     </div>
                     <button
                       onClick={handleLogout}
-                      className="w-full text-left px-4 py-2.5 text-sm text-(--bad) hover:bg-(--surface-alt) transition-colors font-medium"
+                      className="w-full text-left px-4 py-2.5 text-sm text-(--bad) hover:bg-(--surface-alt) hover:pl-5 transition-all duration-200 font-medium"
                     >
                       Cerrar sesión
                     </button>

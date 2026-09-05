@@ -48,7 +48,7 @@ export default function CreditosPage() {
         </p>
         <Link
           href="/creditos/nuevo"
-          className="inline-flex items-center gap-2 bg-linear-to-br from-(--gold-400) to-(--gold-600) text-(--navy-950) font-bold py-2.75 px-5 rounded-xl text-[13px] shadow-[0_8px_20px_-8px_rgba(198,160,82,.5)] transition-all hover:-translate-y-0.5 w-fit"
+          className="inline-flex items-center gap-2 bg-linear-to-br from-(--gold-400) to-(--gold-600) text-(--navy-950) font-bold py-2.75 px-5 rounded-xl text-[13px] shadow-[0_8px_20px_-8px_rgba(198,160,82,.5)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_14px_26px_-8px_rgba(198,160,82,.6)] active:scale-95 w-fit"
         >
           + Nuevo Crédito
         </Link>
@@ -68,7 +68,7 @@ export default function CreditosPage() {
           <p className="text-(--ink-mute) text-sm mb-6">Genera tu primer crédito vehicular usando el método francés</p>
           <Link
             href="/creditos/nuevo"
-            className="inline-flex items-center gap-2 bg-(--navy-900) hover:bg-(--navy-800) text-white font-semibold py-2.5 px-6 rounded-xl transition-all active:scale-95 text-sm"
+            className="inline-flex items-center gap-2 bg-(--navy-900) hover:bg-(--navy-800) text-white font-semibold py-2.5 px-6 rounded-xl transition-all duration-200 hover:-translate-y-1 hover:shadow-md active:scale-95 text-sm"
           >
             + Generar Crédito
           </Link>
@@ -93,10 +93,10 @@ export default function CreditosPage() {
               </thead>
               <tbody>
                 {operaciones.map((op) => (
-                  <tr key={op.id} className="hover:bg-(--gold-100) transition-colors">
+                  <tr key={op.id} className="group hover:bg-(--gold-100) transition-colors duration-150">
                     <td className="px-5.5 py-3.5 whitespace-nowrap border-b border-(--border)">
                       <div className="flex items-center gap-3">
-                        <span className="w-8.5 h-8.5 shrink-0 rounded-[11px] bg-linear-to-br from-(--navy-800) to-(--navy-950) text-(--gold-400) flex items-center justify-center">
+                        <span className="w-8.5 h-8.5 shrink-0 rounded-[11px] bg-linear-to-br from-(--navy-800) to-(--navy-950) text-(--gold-400) flex items-center justify-center transition-transform duration-200 group-hover:scale-110">
                           <IconPersonSolo />
                         </span>
                         <div>
@@ -131,13 +131,13 @@ export default function CreditosPage() {
                       <div className="flex items-center justify-end gap-1">
                         <Link
                           href={`/creditos/${op.id}`}
-                          className="inline-flex items-center gap-1.5 font-bold text-[12.5px] text-(--navy-700) hover:bg-(--surface-alt) py-1.5 px-2.5 rounded-lg transition-colors"
+                          className="group/link inline-flex items-center gap-1.5 font-bold text-[12.5px] text-(--navy-700) hover:bg-(--surface-alt) hover:-translate-y-px py-1.5 px-2.5 rounded-lg transition-all duration-200 active:scale-95"
                         >
-                          Ver <IconArrowRight />
+                          Ver <IconArrowRight className="transition-transform duration-200 group-hover/link:translate-x-1" />
                         </Link>
                         <button
                           onClick={() => handleDelete(op.id)}
-                          className="inline-flex w-8 h-8 rounded-[9px] items-center justify-center text-(--bad) hover:bg-(--surface-alt) transition-colors"
+                          className="inline-flex w-8 h-8 rounded-[9px] items-center justify-center text-(--bad) hover:bg-(--surface-alt) hover:scale-110 active:scale-90 transition-all duration-200"
                           aria-label="Eliminar"
                         >
                           <IconTrash />

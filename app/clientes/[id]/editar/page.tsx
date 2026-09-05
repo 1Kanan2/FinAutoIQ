@@ -68,8 +68,8 @@ export default function EditarClientePage() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-6">
-        <Link href="/clientes" className="inline-flex items-center gap-1 text-(--ink-mute) hover:text-(--ink) text-sm font-medium transition-colors">
-          <IconChevronLeft size={14} /> Volver a clientes
+        <Link href="/clientes" className="group inline-flex items-center gap-1 text-(--ink-mute) hover:text-(--gold-600) text-sm font-medium transition-colors">
+          <IconChevronLeft size={14} className="transition-transform duration-200 group-hover:-translate-x-1" /> Volver a clientes
         </Link>
         <h1 className="font-serif-display italic text-2xl font-semibold text-(--ink) mt-2">Editar Cliente</h1>
       </div>
@@ -115,13 +115,13 @@ export default function EditarClientePage() {
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 bg-(--navy-900) hover:bg-(--navy-800) disabled:opacity-60 text-white font-semibold py-2.75 px-6 rounded-xl transition-all active:scale-[0.98] shadow-[0_10px_24px_-10px_rgba(15,32,68,.5)]"
+              className="flex-1 bg-(--navy-900) hover:bg-(--navy-800) disabled:opacity-60 text-white font-semibold py-2.75 px-6 rounded-xl transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_28px_-10px_rgba(15,32,68,.55)] active:scale-[0.98] shadow-[0_10px_24px_-10px_rgba(15,32,68,.5)]"
             >
               {saving ? 'Guardando...' : 'Guardar Cambios'}
             </button>
             <Link
               href="/clientes"
-              className="flex-1 border border-(--gold-500) text-(--ink) font-semibold py-2.75 px-6 rounded-xl transition-all hover:bg-(--gold-100) active:scale-[0.98] text-center"
+              className="flex-1 border border-(--gold-500) text-(--ink) font-semibold py-2.75 px-6 rounded-xl transition-all duration-200 hover:bg-(--gold-100) hover:-translate-y-0.5 active:scale-[0.98] text-center"
             >
               Cancelar
             </Link>

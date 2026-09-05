@@ -97,11 +97,15 @@ export default function CreditoDetailPage() {
   const segDesgMensual = ((operacion.seguro_desgravamen_pct ?? 0.069) / 100) * operacion.monto_financiar
 
   const tipoLabel = (tipo: string) => {
-    if (tipo === 'gracia_total') return { text: 'G. Total', cls: 'bg-[#fef3c7] text-[#92660a]' }
-    if (tipo === 'gracia_parcial') return { text: 'G. Parcial', cls: 'bg-blue-100 text-blue-800' }
+    if (tipo === 'gracia_total') return { text: 'G. Total', cls: 'bg-(--gold-500)/22 text-(--gold-700)' }
+    if (tipo === 'gracia_parcial') return { text: 'G. Parcial', cls: 'bg-(--good)/20 text-(--good)' }
     return { text: 'Normal', cls: 'bg-(--surface-alt) text-(--ink-mute)' }
   }
-  const rowBg = (tipo: string) => (tipo === 'gracia_total' || tipo === 'gracia_parcial' ? 'bg-[#fef9e7]' : undefined)
+  const rowBg = (tipo: string) => {
+    if (tipo === 'gracia_total') return 'bg-(--gold-500)/13'
+    if (tipo === 'gracia_parcial') return 'bg-(--good)/10'
+    return undefined
+  }
 
   const cuotaNormal = cuotas.find((c) => c.tipo === 'normal')
   const bars = buildBars(cuotas)
@@ -110,17 +114,17 @@ export default function CreditoDetailPage() {
     <div className="space-y-5.5">
       {/* Header */}
       <div>
-        <Link href="/creditos" className="inline-flex items-center gap-1 text-(--ink-mute) hover:text-(--ink) text-[11px] uppercase tracking-[1.5px] font-semibold transition-colors">
-          <IconChevronLeft size={12} /> Historial
+        <Link href="/creditos" className="group inline-flex items-center gap-1 text-(--ink-mute) hover:text-(--gold-600) text-[11px] uppercase tracking-[1.5px] font-semibold transition-colors">
+          <IconChevronLeft size={12} className="transition-transform duration-200 group-hover:-translate-x-1" /> Historial
         </Link>
         <h1 className="font-serif-display italic text-2xl font-semibold text-(--ink) mt-1">Detalle del Crédito</h1>
       </div>
 
       {/* HERO */}
-      <div className="bg-linear-to-br from-(--navy-900) to-(--navy-950) rounded-[20px] px-7 py-6.5 flex items-center justify-between flex-wrap gap-4 relative overflow-hidden shadow-[0_20px_50px_-22px_rgba(15,32,68,.55)]">
-        <div className="absolute -top-15 right-15 w-55 h-55 rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--gold-500)_22%,transparent),transparent_70%)]" />
+      <div className="bg-linear-to-br from-(--navy-900) to-(--navy-950) rounded-[20px] px-7 py-6.5 flex items-center justify-between flex-wrap gap-4 relative overflow-hidden shadow-[0_20px_50px_-22px_rgba(15,32,68,.55)] transition-shadow duration-300 hover:shadow-[0_24px_58px_-20px_rgba(15,32,68,.65)]">
+        <div className="absolute -top-15 right-15 w-55 h-55 rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--gold-500)_22%,transparent),transparent_70%)] animate-float-slow" />
         <div className="flex items-center gap-4 relative">
-          <span className="w-13 h-13 shrink-0 rounded-[15px] bg-linear-to-br from-(--gold-400) to-(--gold-600) text-(--navy-950) font-extrabold text-[17px] flex items-center justify-center">
+          <span className="w-13 h-13 shrink-0 rounded-[15px] bg-linear-to-br from-(--gold-400) to-(--gold-600) text-(--navy-950) font-extrabold text-[17px] flex items-center justify-center transition-transform duration-200 hover:scale-105 hover:rotate-3">
             {iniciales(operacion.clientes?.nombre, operacion.clientes?.apellidos)}
           </span>
           <div>
@@ -128,7 +132,7 @@ export default function CreditoDetailPage() {
               <span className="font-serif-display italic text-lg font-semibold text-white">
                 {operacion.clientes?.nombre} {operacion.clientes?.apellidos}
               </span>
-              <span className="text-[10.5px] font-bold px-2.5 py-1 rounded-full bg-(--good)/22 text-[#7fd6ac] tracking-[.4px]">Activo</span>
+              <span className="text-[10.5px] font-bold px-2.5 py-1 rounded-full bg-(--good)/22 text-[#7fd6ac] tracking-[.4px] animate-pulse">Activo</span>
             </div>
             <p className="text-[13px] text-white/55 mt-1 mb-0">
               {operacion.vehiculos?.marca} {operacion.vehiculos?.modelo} ({operacion.vehiculos?.anio})
@@ -147,7 +151,7 @@ export default function CreditoDetailPage() {
       <div className="grid gap-4.5" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
         <div className="bg-(--surface) border border-(--border) rounded-[18px] shadow-(--shadow) p-6.5 transition-all hover:-translate-y-1 hover:shadow-(--shadow-lg)">
           <div className="flex items-center gap-2.5 mb-4.5 pb-3.5 border-b border-(--border)">
-            <span className="w-7.5 h-7.5 rounded-[9px] bg-(--gold-100) text-(--gold-700) flex items-center justify-center shrink-0">
+            <span className="w-7.5 h-7.5 rounded-[9px] bg-(--gold-100) text-(--gold-700) flex items-center justify-center shrink-0 transition-transform duration-200 hover:scale-110 hover:rotate-6">
               <IconPersonSolo size={15} />
             </span>
             <h2 className="text-xs font-bold text-(--ink) uppercase tracking-[1.3px] m-0">Participantes y Monto</h2>
@@ -166,7 +170,7 @@ export default function CreditoDetailPage() {
 
         <div className="bg-(--surface) border border-(--border) rounded-[18px] shadow-(--shadow) p-6.5 transition-all hover:-translate-y-1 hover:shadow-(--shadow-lg)">
           <div className="flex items-center gap-2.5 mb-4.5 pb-3.5 border-b border-(--border)">
-            <span className="w-7.5 h-7.5 rounded-[9px] bg-(--gold-100) text-(--gold-700) flex items-center justify-center shrink-0">
+            <span className="w-7.5 h-7.5 rounded-[9px] bg-(--gold-100) text-(--gold-700) flex items-center justify-center shrink-0 transition-transform duration-200 hover:scale-110 hover:rotate-6">
               <IconDoc size={15} />
             </span>
             <h2 className="text-xs font-bold text-(--ink) uppercase tracking-[1.3px] m-0">Condiciones del Crédito</h2>
@@ -276,7 +280,7 @@ export default function CreditoDetailPage() {
                 const badge = tipoLabel(fila.tipo)
                 const cuotaTotalFila = fila.cuota + segVehMensual + segDesgMensual
                 return (
-                  <tr key={fila.numero_cuota} className={`border-t border-(--border) ${rowBg(fila.tipo) ?? ''}`}>
+                  <tr key={fila.numero_cuota} className={`border-t border-(--border) hover:bg-(--gold-100) transition-colors duration-150 ${rowBg(fila.tipo) ?? ''}`}>
                     <td className="px-3 py-2.25 font-bold text-(--ink)">{fila.numero_cuota}</td>
                     <td className="px-3 py-2.25 text-right text-(--ink-mute) whitespace-nowrap text-xs">
                       {new Date(fila.fecha_vencimiento + 'T00:00:00').toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' })}
@@ -305,7 +309,7 @@ export default function CreditoDetailPage() {
 
 function InfoRow({ label, value, last }: { label: string; value: string; last?: boolean }) {
   return (
-    <div className={`flex justify-between gap-4 text-[13.5px] py-2.25 ${last ? '' : 'border-b border-(--border)'}`}>
+    <div className={`flex justify-between gap-4 text-[13.5px] py-2.25 px-1.5 -mx-1.5 rounded-md transition-colors hover:bg-(--surface-alt) ${last ? '' : 'border-b border-(--border)'}`}>
       <span className="text-(--ink-mute) shrink-0">{label}</span>
       <span className="text-right font-semibold text-(--ink)">{value}</span>
     </div>
@@ -322,7 +326,7 @@ function MetricCard({
 }) {
   if (variant === 'gold') {
     return (
-      <div className="bg-linear-to-br from-(--gold-400) to-(--gold-600) rounded-2xl p-5 relative overflow-hidden transition-transform hover:-translate-y-1 shadow-[0_16px_34px_-14px_rgba(198,160,82,.55)]">
+      <div className="bg-linear-to-br from-(--gold-400) to-(--gold-600) rounded-2xl p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1.5 hover:scale-[1.02] shadow-[0_16px_34px_-14px_rgba(198,160,82,.55)] hover:shadow-[0_20px_40px_-14px_rgba(198,160,82,.65)]">
         <div className="absolute -top-5 -right-5 w-17.5 h-17.5 rounded-full bg-white/16" />
         <Icon size={18} className="text-(--navy-950) opacity-70 mb-2.5" />
         <div className="text-[10px] font-bold uppercase tracking-[1px] text-(--navy-950) opacity-75 mb-1.5">{label}</div>
@@ -332,7 +336,7 @@ function MetricCard({
   }
   if (variant === 'dark') {
     return (
-      <div className="bg-linear-to-br from-(--navy-900) to-(--navy-950) rounded-2xl p-5 relative overflow-hidden transition-transform hover:-translate-y-1">
+      <div className="bg-linear-to-br from-(--navy-900) to-(--navy-950) rounded-2xl p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1.5 hover:scale-[1.02]">
         <div className="absolute -top-5 -right-5 w-17.5 h-17.5 rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--gold-500)_30%,transparent),transparent_70%)]" />
         <Icon size={18} className="text-(--gold-400) mb-2.5" />
         <div className="text-[10px] font-bold uppercase tracking-[1px] text-(--gold-400) mb-1.5">{label}</div>
@@ -342,7 +346,7 @@ function MetricCard({
   }
   if (variant === 'good') {
     return (
-      <div className="rounded-2xl p-5 transition-all hover:-translate-y-1 hover:shadow-(--shadow) bg-(--good)/10 border border-(--good)/30">
+      <div className="rounded-2xl p-5 transition-all duration-200 hover:-translate-y-1.5 hover:scale-[1.02] hover:shadow-(--shadow) bg-(--good)/10 border border-(--good)/30">
         <Icon size={18} className="text-(--good) mb-2.5" />
         <div className="text-[10px] font-bold uppercase tracking-[1px] text-(--good) mb-1.5">{label}</div>
         <div className="font-serif-display text-[21px] font-bold text-(--good) tabular-nums">{value}</div>
@@ -350,7 +354,7 @@ function MetricCard({
     )
   }
   return (
-    <div className="bg-(--surface) border border-(--border) rounded-2xl p-5 transition-all hover:-translate-y-1 hover:shadow-(--shadow)">
+    <div className="bg-(--surface) border border-(--border) rounded-2xl p-5 transition-all duration-200 hover:-translate-y-1.5 hover:scale-[1.02] hover:shadow-(--shadow)">
       <Icon size={18} className="text-(--ink-mute) mb-2.5" />
       <div className="text-[10px] font-bold uppercase tracking-[1px] text-(--ink-mute) mb-1.5">{label}</div>
       <div className="font-serif-display text-[21px] font-bold text-(--ink) tabular-nums">{value}</div>

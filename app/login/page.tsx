@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
 import ThemeToggle from '@/components/ThemeToggle'
-import { IconBrand, IconDoc, IconWallet, IconPerson, IconSpinner } from '@/components/ui/icons'
+import { IconDoc, IconWallet, IconPerson, IconSpinner } from '@/components/ui/icons'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -48,12 +48,12 @@ export default function LoginPage() {
 
         <div className="relative max-w-115 animate-fade-up">
           <div className="flex items-center gap-3 mb-9">
-            <div className="w-11 h-11 rounded-xl bg-linear-to-br from-(--gold-400) to-(--gold-600) flex items-center justify-center shadow-[0_8px_20px_-6px_rgba(198,160,82,.5)]">
-              <IconBrand size={22} />
+            <div className="w-11 h-11 rounded-xl overflow-hidden shadow-[0_8px_20px_-6px_rgba(198,160,82,.5)]">
+              <img src="/LogoFinAutoIQ.png" alt="FinAutoIQ" className="w-full h-full object-cover" />
             </div>
             <div>
               <div className="font-serif-display italic text-[23px] font-semibold">FinAutoIQ</div>
-              <div className="text-[10px] tracking-[2px] text-(--gold-500) uppercase">Private Banking Suite</div>
+              <div className="text-[10px] tracking-[2px] text-(--gold-500) uppercase">Simulador de Crédito Vehicular</div>
             </div>
           </div>
 
@@ -66,8 +66,8 @@ export default function LoginPage() {
 
           <div className="flex flex-col gap-4.5 mb-9">
             {features.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="flex gap-3.5 items-start">
-                <div className="w-8.5 h-8.5 shrink-0 rounded-[9px] bg-(--gold-500)/14 flex items-center justify-center">
+              <div key={title} className="group flex gap-3.5 items-start transition-transform duration-200 hover:translate-x-1">
+                <div className="w-8.5 h-8.5 shrink-0 rounded-[9px] bg-(--gold-500)/14 flex items-center justify-center transition-all duration-200 group-hover:bg-(--gold-500)/26 group-hover:scale-110">
                   <Icon size={16} className="text-(--gold-400)" />
                 </div>
                 <div>
@@ -87,7 +87,7 @@ export default function LoginPage() {
 
       {/* DERECHA: formulario */}
       <div className="flex-1 basis-95 min-w-0 flex items-center justify-center px-6 py-12 relative">
-        <ThemeToggle className="absolute top-7 right-7 w-10.5 h-10.5 rounded-xl border border-(--border) bg-(--surface-alt) text-(--gold-600) flex items-center justify-center cursor-pointer" />
+        <ThemeToggle className="absolute top-7 right-7 w-10.5 h-10.5 rounded-xl border border-(--border) bg-(--surface-alt) text-(--gold-600) flex items-center justify-center cursor-pointer transition-all duration-200 hover:brightness-105 hover:-translate-y-px hover:shadow-md active:scale-90" />
 
         <div className="w-full max-w-100 animate-fade-up [animation-delay:.1s]">
           <div className="mb-8">
@@ -133,7 +133,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-1.5 w-full py-3.5 rounded-[11px] bg-(--navy-900) hover:bg-(--navy-800) disabled:opacity-60 text-white font-bold text-sm cursor-pointer shadow-[0_10px_24px_-10px_rgba(15,32,68,.5)] transition-all hover:-translate-y-px"
+                className="mt-1.5 w-full py-3.5 rounded-[11px] bg-(--navy-900) hover:bg-(--navy-800) disabled:opacity-60 text-white font-bold text-sm cursor-pointer shadow-[0_10px_24px_-10px_rgba(15,32,68,.5)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_28px_-10px_rgba(15,32,68,.55)] active:scale-[0.98]"
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">

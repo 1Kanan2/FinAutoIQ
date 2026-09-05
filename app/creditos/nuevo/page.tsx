@@ -187,8 +187,8 @@ export default function NuevoCreditoPage() {
 
   const labelCls = 'block text-sm font-medium text-(--ink-soft) mb-1'
   const helpCls = 'text-xs text-(--ink-mute) mt-1'
-  const toggleActiveCls = 'bg-(--navy-900) text-white border-(--navy-900)'
-  const toggleInactiveCls = 'bg-(--surface) text-(--ink) border-(--border) hover:bg-(--surface-alt)'
+  const toggleActiveCls = 'bg-(--navy-900) text-white border-(--navy-900) scale-[1.02]'
+  const toggleInactiveCls = 'bg-(--surface) text-(--ink) border-(--border) hover:bg-(--surface-alt) hover:-translate-y-px'
 
   const handleCalcular = () => {
     setError(null)
@@ -320,8 +320,8 @@ export default function NuevoCreditoPage() {
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <Link href="/creditos" className="inline-flex items-center gap-1 text-(--ink-mute) hover:text-(--ink) text-sm font-medium transition-colors">
-          <IconChevronLeft size={14} /> Volver al historial
+        <Link href="/creditos" className="group inline-flex items-center gap-1 text-(--ink-mute) hover:text-(--gold-600) text-sm font-medium transition-colors">
+          <IconChevronLeft size={14} className="transition-transform duration-200 group-hover:-translate-x-1" /> Volver al historial
         </Link>
         <h1 className="font-serif-display italic text-2xl font-semibold text-(--ink) mt-1.5">Generar Crédito FinAutoIQ</h1>
         <p className="text-(--ink-mute) mt-1 text-sm">Método francés con período de gracia y compra inteligente</p>
@@ -386,7 +386,7 @@ export default function NuevoCreditoPage() {
                 <div className="flex border border-(--border) rounded-lg overflow-hidden w-fit">
                   {(['PEN', 'USD'] as const).map((m) => (
                     <button key={m} type="button" onClick={() => setMoneda(m)}
-                      className={`px-5 py-2 text-sm font-semibold border-r last:border-r-0 border-(--border) transition-colors ${moneda === m ? toggleActiveCls : toggleInactiveCls}`}>
+                      className={`px-5 py-2 text-sm font-semibold border-r last:border-r-0 border-(--border) transition-all duration-200 active:scale-95 ${moneda === m ? toggleActiveCls : toggleInactiveCls}`}>
                       {m === 'PEN' ? 'S/ Soles' : '$ Dólares'}
                     </button>
                   ))}
@@ -435,7 +435,7 @@ export default function NuevoCreditoPage() {
                 <div className="flex border border-(--border) rounded-lg overflow-hidden w-fit">
                   {(['efectiva', 'nominal'] as const).map((t) => (
                     <button key={t} type="button" onClick={() => setTipoTasa(t)}
-                      className={`px-5 py-2 text-sm font-semibold border-r last:border-r-0 border-(--border) transition-colors ${tipoTasa === t ? toggleActiveCls : toggleInactiveCls}`}>
+                      className={`px-5 py-2 text-sm font-semibold border-r last:border-r-0 border-(--border) transition-all duration-200 active:scale-95 ${tipoTasa === t ? toggleActiveCls : toggleInactiveCls}`}>
                       {t === 'efectiva' ? 'TEA — Efectiva' : 'TNA — Nominal'}
                     </button>
                   ))}
@@ -607,7 +607,7 @@ export default function NuevoCreditoPage() {
               type="button"
               onClick={handleCalcular}
               disabled={hayErrores}
-              className="w-full md:w-auto bg-(--navy-900) hover:bg-(--navy-800) active:bg-(--navy-950) disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3.5 px-12 rounded-[11px] text-base transition-all shadow-[0_10px_24px_-10px_rgba(15,32,68,.5)] active:scale-[0.98]"
+              className="w-full md:w-auto bg-(--navy-900) hover:bg-(--navy-800) active:bg-(--navy-950) disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 text-white font-bold py-3.5 px-12 rounded-[11px] text-base transition-all duration-200 shadow-[0_10px_24px_-10px_rgba(15,32,68,.5)] hover:-translate-y-0.5 hover:shadow-[0_16px_30px_-10px_rgba(15,32,68,.6)] active:scale-[0.98]"
             >
               CALCULAR CRONOGRAMA
             </button>
@@ -649,11 +649,11 @@ export default function NuevoCreditoPage() {
           {/* Leyenda */}
           <div className="flex flex-wrap gap-5 text-xs text-(--ink-mute)">
             <span className="flex items-center gap-1.5">
-              <span className="inline-block w-3 h-3 rounded bg-[#fef3c7]" />
+              <span className="inline-block w-3 h-3 rounded bg-(--gold-500)/40" />
               Gracia total — cuota = 0, saldo crece
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="inline-block w-3 h-3 rounded bg-blue-100" />
+              <span className="inline-block w-3 h-3 rounded bg-(--good)/40" />
               Gracia parcial — solo intereses
             </span>
             {esCompraInteligente && (
@@ -686,12 +686,12 @@ export default function NuevoCreditoPage() {
                   {resultado.cronograma.map((fila) => {
                     const isGT = fila.tipoFila === 'gracia_total'
                     const isGP = fila.tipoFila === 'gracia_parcial'
-                    const rowBg = isGT ? 'bg-[#fffbeb]' : isGP ? 'bg-blue-50' : undefined
+                    const rowBg = isGT ? 'bg-(--gold-500)/13' : isGP ? 'bg-(--good)/10' : undefined
                     const badgeText = isGT ? 'G. Total' : isGP ? 'G. Parcial' : 'Normal'
                     const badgeCls = isGT
-                      ? 'bg-[#fef3c7] text-[#92660a]'
+                      ? 'bg-(--gold-500)/22 text-(--gold-700)'
                       : isGP
-                      ? 'bg-blue-100 text-blue-800'
+                      ? 'bg-(--good)/20 text-(--good)'
                       : 'bg-(--surface-alt) text-(--ink-mute)'
 
                     return (
@@ -723,7 +723,7 @@ export default function NuevoCreditoPage() {
               type="button"
               onClick={handleGuardar}
               disabled={guardando}
-              className="bg-linear-to-br from-(--gold-400) to-(--gold-600) disabled:opacity-50 text-(--navy-950) font-bold py-3.5 px-10 rounded-[11px] text-base transition-all shadow-[0_10px_24px_-10px_rgba(198,160,82,.5)] active:scale-[0.98] hover:-translate-y-0.5"
+              className="bg-linear-to-br from-(--gold-400) to-(--gold-600) disabled:opacity-50 text-(--navy-950) font-bold py-3.5 px-10 rounded-[11px] text-base transition-all duration-200 shadow-[0_10px_24px_-10px_rgba(198,160,82,.5)] hover:-translate-y-0.5 hover:shadow-[0_16px_30px_-10px_rgba(198,160,82,.65)] active:scale-[0.98]"
             >
               {guardando ? 'Guardando...' : 'GUARDAR OPERACIÓN'}
             </button>
@@ -744,7 +744,7 @@ function MetricCard({
 }) {
   if (variant === 'gold') {
     return (
-      <div className="rounded-xl p-4 transition-transform hover:-translate-y-0.5 bg-linear-to-br from-(--gold-400) to-(--gold-600) shadow-[0_10px_24px_-12px_rgba(198,160,82,.5)]">
+      <div className="rounded-xl p-4 transition-all duration-200 hover:-translate-y-1 hover:scale-[1.02] bg-linear-to-br from-(--gold-400) to-(--gold-600) shadow-[0_10px_24px_-12px_rgba(198,160,82,.5)] hover:shadow-[0_16px_30px_-12px_rgba(198,160,82,.6)]">
         <div className="text-xs font-semibold mb-1 text-(--navy-950)/75">{label}</div>
         <div className={`font-bold leading-tight break-all tabular-nums text-(--navy-950) ${big ? 'text-2xl' : 'text-base'}`}>{value}</div>
         {subtitle && <div className="text-xs text-(--navy-950)/70 mt-1">{subtitle}</div>}
@@ -753,7 +753,7 @@ function MetricCard({
   }
   if (variant === 'dark') {
     return (
-      <div className="rounded-xl p-4 transition-transform hover:-translate-y-0.5 bg-linear-to-br from-(--navy-900) to-(--navy-950)">
+      <div className="rounded-xl p-4 transition-all duration-200 hover:-translate-y-1 hover:scale-[1.02] bg-linear-to-br from-(--navy-900) to-(--navy-950)">
         <div className="text-xs font-semibold mb-1 text-(--gold-400)">{label}</div>
         <div className={`font-bold leading-tight break-all tabular-nums text-white ${big ? 'text-2xl' : 'text-base'}`}>{value}</div>
         {subtitle && <div className="text-xs text-white/60 mt-1">{subtitle}</div>}
@@ -761,8 +761,8 @@ function MetricCard({
     )
   }
   if (variant === 'good' || variant === 'bad') {
-    const goodCls = 'border rounded-xl p-4 transition-shadow hover:shadow-(--shadow) bg-(--good)/10 border-(--good)/30'
-    const badCls = 'border rounded-xl p-4 transition-shadow hover:shadow-(--shadow) bg-(--bad)/10 border-(--bad)/30'
+    const goodCls = 'border rounded-xl p-4 transition-all duration-200 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-(--shadow) bg-(--good)/10 border-(--good)/30'
+    const badCls = 'border rounded-xl p-4 transition-all duration-200 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-(--shadow) bg-(--bad)/10 border-(--bad)/30'
     return (
       <div className={variant === 'good' ? goodCls : badCls}>
         <div className={`text-xs font-semibold mb-1 ${variant === 'good' ? 'text-(--good)' : 'text-(--bad)'}`}>{label}</div>
@@ -772,7 +772,7 @@ function MetricCard({
     )
   }
   return (
-    <div className="border border-(--border) rounded-xl p-4 transition-shadow hover:shadow-(--shadow) bg-(--surface-alt)">
+    <div className="border border-(--border) rounded-xl p-4 transition-all duration-200 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-(--shadow) bg-(--surface-alt)">
       <div className="text-xs font-semibold mb-1 text-(--ink-mute)">{label}</div>
       <div className={`font-bold leading-tight break-all tabular-nums text-(--ink) ${big ? 'text-2xl' : 'text-base'}`}>{value}</div>
       {subtitle && <div className="text-xs text-(--ink-soft) mt-1">{subtitle}</div>}

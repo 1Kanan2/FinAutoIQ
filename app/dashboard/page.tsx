@@ -109,11 +109,11 @@ export default function DashboardPage() {
           {kpis.map(({ icon: Icon, value, label }, i) => (
             <div
               key={label}
-              className="bg-(--surface) border border-(--border) rounded-[20px] p-6.5 shadow-(--shadow) relative overflow-hidden animate-fade-up"
+              className="group bg-(--surface) border border-(--border) rounded-[20px] p-6.5 shadow-(--shadow) relative overflow-hidden animate-fade-up transition-all duration-200 hover:-translate-y-1.5 hover:scale-[1.015] hover:shadow-(--shadow-lg)"
               style={{ animationDelay: `${i * 0.05}s` }}
             >
               <div className="absolute -top-7.5 -right-7.5 w-25 h-25 rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--gold-500)_14%,transparent),transparent_70%)]" />
-              <Icon size={22} className="text-(--gold-600) mb-4" />
+              <Icon size={22} className="text-(--gold-600) mb-4 transition-transform duration-200 group-hover:scale-110 group-hover:-rotate-3" />
               <div className="font-serif-display text-4xl font-semibold text-(--ink) leading-none tabular-nums">{value}</div>
               <div className="text-[12.5px] text-(--ink-mute) mt-2 font-medium">{label}</div>
             </div>
@@ -121,11 +121,11 @@ export default function DashboardPage() {
 
           {/* Cartera */}
           <div
-            className="bg-linear-to-br from-(--navy-900) to-(--navy-800) rounded-[20px] p-6.5 relative overflow-hidden shadow-[0_20px_50px_-20px_rgba(15,31,61,.55)] animate-fade-up"
+            className="group bg-linear-to-br from-(--navy-900) to-(--navy-800) rounded-[20px] p-6.5 relative overflow-hidden shadow-[0_20px_50px_-20px_rgba(15,31,61,.55)] animate-fade-up transition-all duration-200 hover:-translate-y-1.5 hover:scale-[1.015]"
             style={{ animationDelay: '.15s' }}
           >
             <div className="absolute -top-7.5 -right-7.5 w-30 h-30 rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--gold-500)_28%,transparent),transparent_70%)]" />
-            <IconWallet size={22} className="text-(--gold-400) mb-4" />
+            <IconWallet size={22} className="text-(--gold-400) mb-4 transition-transform duration-200 group-hover:scale-110 group-hover:-rotate-3" />
             <div className="font-serif-display text-2xl font-semibold text-white leading-tight tabular-nums">
               {(metricas?.carteraPEN ?? 0) > 0 && <div>S/ {(metricas!.carteraPEN).toLocaleString('es-PE', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</div>}
               {(metricas?.carteraUSD ?? 0) > 0 && <div className="text-lg opacity-75 mt-0.5">$ {(metricas!.carteraUSD).toLocaleString('es-PE', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</div>}
@@ -142,19 +142,19 @@ export default function DashboardPage() {
         <div className="flex flex-wrap gap-3">
           <Link
             href="/clientes/nuevo"
-            className="bg-(--navy-900) hover:bg-(--navy-800) text-white font-semibold py-3 px-5.5 rounded-xl text-[13.5px] shadow-[0_8px_20px_-8px_rgba(15,32,68,.4)] transition-all hover:-translate-y-0.5"
+            className="bg-(--navy-900) hover:bg-(--navy-800) text-white font-semibold py-3 px-5.5 rounded-xl text-[13.5px] shadow-[0_8px_20px_-8px_rgba(15,32,68,.4)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_14px_26px_-8px_rgba(15,32,68,.5)] active:scale-95"
           >
             + Nuevo Cliente
           </Link>
           <Link
             href="/vehiculos/nuevo"
-            className="bg-(--navy-900) hover:bg-(--navy-800) text-white font-semibold py-3 px-5.5 rounded-xl text-[13.5px] shadow-[0_8px_20px_-8px_rgba(15,32,68,.4)] transition-all hover:-translate-y-0.5"
+            className="bg-(--navy-900) hover:bg-(--navy-800) text-white font-semibold py-3 px-5.5 rounded-xl text-[13.5px] shadow-[0_8px_20px_-8px_rgba(15,32,68,.4)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_14px_26px_-8px_rgba(15,32,68,.5)] active:scale-95"
           >
             + Nuevo Vehículo
           </Link>
           <Link
             href="/creditos/nuevo"
-            className="bg-linear-to-br from-(--gold-400) to-(--gold-600) text-(--navy-950) font-bold py-3 px-5.5 rounded-xl text-[13.5px] shadow-[0_8px_20px_-8px_rgba(198,160,82,.5)] transition-all hover:-translate-y-0.5"
+            className="bg-linear-to-br from-(--gold-400) to-(--gold-600) text-(--navy-950) font-bold py-3 px-5.5 rounded-xl text-[13.5px] shadow-[0_8px_20px_-8px_rgba(198,160,82,.5)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_14px_26px_-8px_rgba(198,160,82,.6)] active:scale-95"
           >
             + Nuevo Crédito
           </Link>
@@ -165,8 +165,8 @@ export default function DashboardPage() {
       <div>
         <div className="flex items-center justify-between mb-3.5">
           <h2 className="font-serif-display italic text-lg font-semibold text-(--ink)">Últimas operaciones</h2>
-          <Link href="/creditos" className="text-[13px] font-bold text-(--gold-600) hover:text-(--gold-500) transition-colors">
-            Ver todas →
+          <Link href="/creditos" className="group text-[13px] font-bold text-(--gold-600) hover:text-(--gold-500) transition-colors">
+            Ver todas <span className="inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
           </Link>
         </div>
 
@@ -202,10 +202,10 @@ export default function DashboardPage() {
                 </thead>
                 <tbody>
                   {ultimasOps.map((op) => (
-                    <tr key={op.id} className="hover:bg-(--gold-100) transition-colors">
+                    <tr key={op.id} className="group hover:bg-(--gold-100) transition-colors">
                       <td className="px-5.5 py-3.5 whitespace-nowrap border-b border-(--border)">
                         <div className="flex items-center gap-3">
-                          <span className="w-8.5 h-8.5 shrink-0 rounded-[11px] bg-linear-to-br from-(--navy-800) to-(--navy-950) text-(--gold-400) flex items-center justify-center">
+                          <span className="w-8.5 h-8.5 shrink-0 rounded-[11px] bg-linear-to-br from-(--navy-800) to-(--navy-950) text-(--gold-400) flex items-center justify-center transition-transform duration-200 group-hover:scale-110">
                             <IconPersonSolo />
                           </span>
                           <span className="font-bold text-(--ink)">{op.clientes?.nombre} {op.clientes?.apellidos}</span>
@@ -228,9 +228,9 @@ export default function DashboardPage() {
                       <td className="px-5.5 py-3.5 text-right whitespace-nowrap border-b border-(--border)">
                         <Link
                           href={`/creditos/${op.id}`}
-                          className="inline-flex items-center gap-1.5 font-bold text-xs text-white bg-(--navy-900) hover:bg-(--navy-800) py-1.5 px-3 rounded-lg transition-colors"
+                          className="group/link inline-flex items-center gap-1.5 font-bold text-xs text-white bg-(--navy-900) hover:bg-(--navy-800) py-1.5 px-3 rounded-lg transition-all duration-200 hover:-translate-y-px hover:shadow-md active:scale-95"
                         >
-                          Ver <IconArrowRight />
+                          Ver <IconArrowRight className="transition-transform duration-200 group-hover/link:translate-x-1" />
                         </Link>
                       </td>
                     </tr>
@@ -250,17 +250,17 @@ export default function DashboardPage() {
             <Link
               key={n}
               href={href}
-              className={`rounded-2xl p-5 flex flex-col gap-2.5 transition-all hover:-translate-y-1 ${
+              className={`group rounded-2xl p-5 flex flex-col gap-2.5 transition-all duration-200 hover:-translate-y-1.5 hover:scale-[1.02] ${
                 dark
                   ? 'bg-linear-to-br from-(--navy-900) to-(--navy-950) shadow-[0_20px_40px_-18px_rgba(15,32,68,.5)]'
                   : 'bg-(--surface) border border-(--border) shadow-(--shadow) hover:shadow-(--shadow-lg)'
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className={`w-8 h-8 rounded-[10px] flex items-center justify-center font-extrabold text-[13px] ${dark ? 'bg-(--gold-500)/18 text-(--gold-400)' : 'bg-(--gold-100) text-(--gold-700)'}`}>
+                <span className={`w-8 h-8 rounded-[10px] flex items-center justify-center font-extrabold text-[13px] transition-transform duration-200 group-hover:scale-110 ${dark ? 'bg-(--gold-500)/18 text-(--gold-400)' : 'bg-(--gold-100) text-(--gold-700)'}`}>
                   {n}
                 </span>
-                <Icon size={17} className={dark ? 'text-(--gold-400)' : 'text-(--ink-mute)'} />
+                <Icon size={17} className={`transition-transform duration-200 group-hover:rotate-6 ${dark ? 'text-(--gold-400)' : 'text-(--ink-mute)'}`} />
               </div>
               <p className={`text-sm font-bold m-0 ${dark ? 'text-white' : 'text-(--ink)'}`}>{title}</p>
               <p className={`text-[12.5px] m-0 leading-relaxed ${dark ? 'text-white/55' : 'text-(--ink-mute)'}`}>{desc}</p>

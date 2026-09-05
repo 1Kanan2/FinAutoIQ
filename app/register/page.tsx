@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
 import ThemeToggle from '@/components/ThemeToggle'
-import { IconBrand, IconSpinner } from '@/components/ui/icons'
+import { IconSpinner } from '@/components/ui/icons'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -46,15 +46,15 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-(--bg) text-(--ink) py-12 px-4 relative">
-      <ThemeToggle className="absolute top-7 right-7 w-10.5 h-10.5 rounded-xl border border-(--border) bg-(--surface-alt) text-(--gold-600) flex items-center justify-center cursor-pointer" />
+      <ThemeToggle className="absolute top-7 right-7 w-10.5 h-10.5 rounded-xl border border-(--border) bg-(--surface-alt) text-(--gold-600) flex items-center justify-center cursor-pointer transition-all duration-200 hover:brightness-105 hover:-translate-y-px hover:shadow-md active:scale-90" />
 
       <div className="w-full max-w-100 animate-fade-up">
         <div className="text-center mb-8">
-          <div className="w-11 h-11 mx-auto rounded-xl bg-linear-to-br from-(--gold-400) to-(--gold-600) flex items-center justify-center shadow-[0_8px_20px_-6px_rgba(198,160,82,.5)] mb-3">
-            <IconBrand size={22} />
+          <div className="w-11 h-11 mx-auto rounded-xl overflow-hidden shadow-[0_8px_20px_-6px_rgba(198,160,82,.5)] mb-3">
+            <img src="/LogoFinAutoIQ.png" alt="FinAutoIQ" className="w-full h-full object-cover" />
           </div>
           <h1 className="font-serif-display italic text-[26px] font-semibold text-(--ink) mb-1">FinAutoIQ</h1>
-          <p className="text-[13.5px] text-(--gold-600) font-semibold">Private Banking Suite</p>
+          <p className="text-[13.5px] text-(--gold-600) font-semibold">Simulador de Crédito Vehicular</p>
         </div>
 
         <div className="bg-(--surface) border border-(--border) rounded-[20px] shadow-(--shadow) p-8">
@@ -121,7 +121,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading || success}
-              className="mt-1.5 w-full py-3.5 rounded-[11px] bg-(--navy-900) hover:bg-(--navy-800) disabled:opacity-60 text-white font-bold text-sm cursor-pointer shadow-[0_10px_24px_-10px_rgba(15,32,68,.5)] transition-all hover:-translate-y-px"
+              className="mt-1.5 w-full py-3.5 rounded-[11px] bg-(--navy-900) hover:bg-(--navy-800) disabled:opacity-60 text-white font-bold text-sm cursor-pointer shadow-[0_10px_24px_-10px_rgba(15,32,68,.5)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_28px_-10px_rgba(15,32,68,.55)] active:scale-[0.98]"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">

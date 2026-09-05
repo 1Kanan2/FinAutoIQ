@@ -26,10 +26,16 @@ export default function ThemeToggle({ className }: { className?: string }) {
       aria-label="Cambiar tema claro/oscuro"
       className={
         className ??
-        'w-[42px] h-[42px] rounded-xl border border-[var(--border)] bg-[var(--surface-alt)] text-[var(--gold-600)] flex items-center justify-center cursor-pointer shrink-0 hover:brightness-105 transition-all'
+        'w-10.5 h-10.5 rounded-xl border border-(--border) bg-(--surface-alt) text-(--gold-600) flex items-center justify-center cursor-pointer shrink-0 transition-all duration-200 hover:brightness-105 hover:-translate-y-px hover:shadow-md active:scale-90'
       }
     >
-      {isDark ? <IconSun /> : <IconMoon />}
+      <span
+        key={isDark ? 'dark' : 'light'}
+        className="inline-flex animate-fade-up"
+        style={{ animationDuration: '.35s' }}
+      >
+        {isDark ? <IconSun /> : <IconMoon />}
+      </span>
     </button>
   )
 }

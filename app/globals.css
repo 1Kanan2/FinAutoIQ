@@ -111,3 +111,11 @@ input, select, textarea, button {
 .animate-float-slow {
   animation: floatSlow 10s ease-in-out infinite;
 }
+
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--gold-500) 45%, transparent); }
+  50% { box-shadow: 0 0 0 7px color-mix(in srgb, var(--gold-500) 0%, transparent); }
+}
+.animate-breathe {
+  animation: breathe 2.6s ease-in-out infinite;
+}

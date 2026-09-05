@@ -41,15 +41,15 @@ export default function AutorCard() {
         <div className="w-62.5 bg-(--surface) border border-(--border) rounded-[18px] p-5 shadow-(--shadow) relative animate-fade-up">
           <button
             onClick={() => setOpen(false)}
-            className="absolute top-3 right-3 w-5.5 h-5.5 flex items-center justify-center rounded-full text-(--ink-mute) bg-(--surface-alt) hover:text-(--ink) transition-colors"
+            className="absolute top-3 right-3 w-5.5 h-5.5 flex items-center justify-center rounded-full text-(--ink-mute) bg-(--surface-alt) hover:text-(--ink) hover:rotate-90 transition-all duration-200"
             aria-label="Cerrar"
           >
             <IconClose />
           </button>
 
           <div className="flex flex-col items-center gap-2">
-            <div className="w-13 h-13 rounded-[14px] bg-linear-to-br from-(--gold-400) to-(--gold-600) flex items-center justify-center text-(--navy-950) font-extrabold text-[17px]">
-              KH
+            <div className="w-13 h-13 rounded-full p-0.5 bg-(--surface) border-2 border-(--gold-500) overflow-hidden">
+              <img src="/LogoKH.png" alt="Keyner Hancco" className="w-full h-full rounded-full object-cover" />
             </div>
             <div className="text-center">
               <p className="text-[10px] text-(--ink-mute) uppercase tracking-wider m-0">Creado por</p>
@@ -64,14 +64,14 @@ export default function AutorCard() {
               href="https://github.com/1Kanan2"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-9 h-9 rounded-[10px] flex items-center justify-center bg-(--navy-900) hover:opacity-85 transition-opacity"
+              className="w-9 h-9 rounded-[10px] flex items-center justify-center bg-(--navy-900) transition-all duration-200 hover:opacity-85 hover:scale-110 hover:-translate-y-0.5 active:scale-95"
               aria-label="GitHub"
             >
               <IconGithub />
             </a>
             <a
               href="mailto:keynerivan@outlook.com"
-              className="w-9 h-9 rounded-[10px] flex items-center justify-center bg-(--gold-600) hover:opacity-85 transition-opacity"
+              className="w-9 h-9 rounded-[10px] flex items-center justify-center bg-(--gold-600) transition-all duration-200 hover:opacity-85 hover:scale-110 hover:-translate-y-0.5 active:scale-95"
               aria-label="Email"
             >
               <IconMail />
@@ -80,7 +80,7 @@ export default function AutorCard() {
               href="https://wa.me/51948646060"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-9 h-9 rounded-[10px] flex items-center justify-center bg-(--good) hover:opacity-85 transition-opacity"
+              className="w-9 h-9 rounded-[10px] flex items-center justify-center bg-(--good) transition-all duration-200 hover:opacity-85 hover:scale-110 hover:-translate-y-0.5 active:scale-95"
               aria-label="WhatsApp"
             >
               <IconWhatsapp />
@@ -91,7 +91,7 @@ export default function AutorCard() {
 
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-13 h-13 rounded-full p-0.5 bg-(--surface) border-2 border-(--gold-500) shadow-(--shadow) flex items-center justify-center overflow-hidden transition-transform duration-200 hover:scale-110 focus:outline-none"
+        className={`w-13 h-13 rounded-full p-0.5 bg-(--surface) border-2 border-(--gold-500) shadow-(--shadow) flex items-center justify-center overflow-hidden transition-transform duration-200 hover:scale-110 hover:rotate-3 active:scale-95 focus:outline-none ${open ? '' : 'animate-breathe'}`}
         aria-label="Sobre el autor"
       >
         <img src="/LogoKH.png" alt="KH" width={48} height={48} className="rounded-full object-cover" />
