@@ -58,7 +58,7 @@ export default function LoginPage() {
           </div>
 
           <h1 className="font-serif-display text-[32px] md:text-[38px] leading-[1.18] font-semibold mb-4.5">
-            Financiamiento vehicular con <span className="italic text-(--gold-400)">precisión</span> de banca privada.
+            Financiamiento vehicular preciso con data <span className="italic text-(--gold-400)">real</span>.
           </h1>
           <p className="text-[14.5px] leading-[1.7] text-white/68 mb-8.5">
             Simulador de crédito automotor que calcula cronogramas bajo el método francés, con VAN, TIR y TCEA en tiempo real — pensado para asesorías financieras que exigen exactitud y presentación impecable.
