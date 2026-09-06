@@ -79,8 +79,10 @@ export default function LoginPage() {
           </div>
 
           <div className="flex items-center gap-2.5 pt-5 border-t border-white/10">
-            <div className="w-7.5 h-7.5 rounded-[9px] bg-linear-to-br from-(--gold-400) to-(--gold-600) text-(--navy-950) font-extrabold text-xs flex items-center justify-center">KH</div>
-            <p className="text-xs text-white/55 m-0">Proyecto de portafolio de <span className="text-white font-semibold">Keyner Hancco</span></p>
+            <div className="w-7.5 h-7.5 shrink-0 rounded-[9px] overflow-hidden">
+              <img src="/LogoKH.png" alt="Keyner Hancco" className="w-full h-full object-cover" />
+            </div>
+            <p className="text-xs text-white/55 m-0">Proyecto realizado por <span className="text-white font-bold">Keyner Hancco</span></p>
           </div>
         </div>
       </div>
